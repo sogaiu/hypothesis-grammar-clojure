@@ -2,6 +2,8 @@ from hypothesis import assume
 from hypothesis.strategies import booleans, characters, integers, text
 from hypothesis.strategies import composite, just, lists, one_of
 
+from .utils import to_ascii
+
 @composite
 def any_character_as_str(draw):
     # XXX: will include surrogates which seem to lead to problems
