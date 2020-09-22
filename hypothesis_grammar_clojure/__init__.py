@@ -44,6 +44,7 @@ __version__ = '0.0.1'
 
 # potential users
 #
+# - calva (see src/cursor-doc)
 # - parcera
 # - parinferish
 # - rewrite-cljc
