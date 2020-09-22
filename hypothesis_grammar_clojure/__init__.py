@@ -45,7 +45,13 @@ __version__ = '0.0.1'
 # potential users
 #
 # - calva (see src/cursor-doc)
+#     https://github.com/BetterThanTomorrow/calva
+#     https://www.npmjs.com/package/calva-clojure-cursor-doc
 # - parcera
+#     https://github.com/carocad/parcera
 # - parinferish
+#     https://github.com/oakes/parinferish
 # - rewrite-cljc
+#     https://github.com/lread/rewrite-cljc-playground
 # - tree-sitter-clojure
+#     https://github.com/sogaiu/tree-sitter-clojure
