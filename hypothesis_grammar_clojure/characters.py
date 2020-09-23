@@ -10,8 +10,6 @@ def any_character_as_str(draw):
     #      but unclear whether that's in tree-sitter or python...
     #character = draw(characters())
     character = draw(text(min_size=1, max_size=1))
-    # XXX: tree-sitter cannot handle null byte (0)
-    assume(character != '\x00')
     #
     return f'\\{character}'
 
