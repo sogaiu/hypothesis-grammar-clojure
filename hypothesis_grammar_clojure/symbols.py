@@ -7,7 +7,7 @@ from hypothesis.strategies import composite, lists, sampled_from
 @composite
 def unqualified_symbol_as_str(draw):
     # XXX: ignoring non-ascii
-    ok_in_head = ("*", "+", "!", "-", "_",
+    ok_in_head = ["*", "+", "!", "-", "_",
                   "?", "<", ">", "=",
                   "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
                   "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
@@ -16,8 +16,8 @@ def unqualified_symbol_as_str(draw):
                   "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
                   "U", "V", "W", "X", "Y", "Z",
                   "/",
-                  ".")
-    ok_in_body = ("*", "+", "!", "-", "_", "'",
+                  "."]
+    ok_in_body = ["*", "+", "!", "-", "_", "'",
                   "?", "<", ">", "=",
                   "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
                   "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
@@ -28,7 +28,7 @@ def unqualified_symbol_as_str(draw):
                   "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
                   ".",
                   ":",
-                  "#")
+                  "#"]
     #
     n = draw(integers(min_value=0, max_value=19))
     #
@@ -62,7 +62,7 @@ def unqualified_symbol_as_str(draw):
 @composite
 def qualified_symbol_as_str(draw):
     # XXX: ignoring on-ascii
-    ok_in_head = ("*", "+", "!", "-", "_",
+    ok_in_head = ["*", "+", "!", "-", "_",
                   "?", "<", ">", "=",
                   "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
                   "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
@@ -70,8 +70,8 @@ def qualified_symbol_as_str(draw):
                   "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
                   "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
                   "U", "V", "W", "X", "Y", "Z",
-                  ".")
-    ok_in_body = ("*", "+", "!", "-", "_", "'",
+                  "."]
+    ok_in_body = ["*", "+", "!", "-", "_", "'",
                   "?", "<", ">", "=",
                   "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
                   "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
@@ -82,7 +82,7 @@ def qualified_symbol_as_str(draw):
                   "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
                   ".",
                   ":",
-                  "#")
+                  "#"]
     #
     n = draw(integers(min_value=0, max_value=19))
     #

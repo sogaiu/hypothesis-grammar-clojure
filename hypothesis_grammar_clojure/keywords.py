@@ -7,7 +7,7 @@ from hypothesis.strategies import composite, lists, one_of, sampled_from
 @composite
 def unqualified_keyword_no_sigil_as_str(draw):
     # XXX: ignoring non-ascii
-    ok_in_head = ("*", "+", "!", "-", "_",
+    ok_in_head = ["*", "+", "!", "-", "_",
                   "?", "<", ">", "=",
                   "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
                   "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
@@ -17,8 +17,8 @@ def unqualified_keyword_no_sigil_as_str(draw):
                   "U", "V", "W", "X", "Y", "Z",
                   # https://clojure.atlassian.net/browse/TCHECK-155
                   "/",
-                  ".")
-    ok_in_body = ("*", "+", "!", "-", "_", "'",
+                  "."]
+    ok_in_body = ["*", "+", "!", "-", "_", "'",
                   "?", "<", ">", "=",
                   "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
                   "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
@@ -29,7 +29,7 @@ def unqualified_keyword_no_sigil_as_str(draw):
                   "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
                   ".",
                   ":",
-                  "#")
+                  "#"]
     #
     n = draw(integers(min_value=0, max_value=19))
     #
@@ -70,7 +70,7 @@ def unqualified_auto_resolved_keyword_as_str(draw):
 @composite
 def keyword_ns_as_str(draw):
     # XXX: ignoring non-ascii
-    ok_in_head = ("*", "+", "!", "-", "_",
+    ok_in_head = ["*", "+", "!", "-", "_",
                   "?", "<", ">", "=",
                   "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
                   "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
@@ -78,8 +78,8 @@ def keyword_ns_as_str(draw):
                   "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
                   "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
                   "U", "V", "W", "X", "Y", "Z",
-                  ".")
-    ok_in_body = ("*", "+", "!", "-", "_", "'",
+                  "."]
+    ok_in_body = ["*", "+", "!", "-", "_", "'",
                   "?", "<", ">", "=",
                   "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
                   "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
@@ -90,7 +90,7 @@ def keyword_ns_as_str(draw):
                   "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
                   ".",
                   ":",
-                  "#")
+                  "#"]
     #
     n = draw(integers(min_value=0, max_value=19))
     #

@@ -5,7 +5,7 @@ from hypothesis.strategies import composite, lists
 def string_as_str(draw):
     n = draw(integers(min_value=0, max_value=100))
     #
-    not_tween_delims = ('"', '\\')
+    not_tween_delims = ['"', '\\']
     #
     chars = \
         draw(lists(elements=characters(blacklist_characters=not_tween_delims,
