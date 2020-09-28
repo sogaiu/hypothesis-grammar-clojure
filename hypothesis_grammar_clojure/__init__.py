@@ -5,7 +5,7 @@ __version__ = '0.0.1'
 # grammatical pieces
 #
 # subatomic (1)
-#   auto_resolve_marker
+#   auto_res_marker
 #
 # atomic (10)
 #   boolean
@@ -19,24 +19,28 @@ __version__ = '0.0.1'
 #   + symbol
 #   symbolic_value
 #
-# compound (17)
-#   discard_expr
+# collection-like (8)
+#   anon_func
 #   list
 #   map
-#   vector
-#   set
-#   anon_func
+#   namespaced_map
 #   read_cond
 #   read_cond_splicing
-#   namespaced_map
-#   var_quote_form
-#   eval_form
-#   tagged_literal
-#   syntax_quote_form
-#   quote_form
-#   unquote_splicing_form
-#   unquote_form
+#   set
+#   vector
+#
+# adorned form (7)
 #   deref_form
+#   eval_form
+#   quote_form
+#   syntax_quote_form
+#   unquote_form
+#   unquote_splicing_form
+#   var_quote_form
+#
+# other (2)
+#   discard_expr
+#   tagged_literal
 #
 # compound but not standalone (2)
 #   metadata
