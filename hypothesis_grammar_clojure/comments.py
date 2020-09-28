@@ -1,6 +1,7 @@
 from hypothesis.strategies import characters, integers
 from hypothesis.strategies import composite, lists
 
+# XXX: not going to bother with the #! type of comment for now
 @composite
 def comment_as_str(draw):
     n = draw(integers(min_value=0, max_value=100))
