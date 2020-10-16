@@ -18,8 +18,7 @@ def build_sym_str(item):
     return item["inputs"]
 
 @composite
-def unqualified_symbol_items(draw):
-    sym_str = draw(unqualified_symbol_as_str())
+def unqualified_symbol_as_str(draw):
     # XXX: ignoring non-ascii
     ok_in_head = ["*", "+", "!", "-", "_",
                   "?", "<", ">", "=",
@@ -71,7 +70,11 @@ def unqualified_symbol_items(draw):
         if (head_char == "+") or (head_char == "-"):
             assume(not(re.search("^[0-9]$", sym_body[0])))
     #
-    sym_str = f'{head_char}{sym_body}'
+    return f'{head_char}{sym_body}'
+    
+@composite
+def unqualified_symbol_items(draw):
+    sym_str = draw(unqualified_symbol_as_str())
     #
     return {"inputs": sym_str,
             "label": label,

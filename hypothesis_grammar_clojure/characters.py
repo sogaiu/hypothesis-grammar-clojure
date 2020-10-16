@@ -22,7 +22,7 @@ def any_character_items(draw):
     #
     chr_str = f'\\{character}'
     # XXX: tree-sitter cannot handle null byte (0)
-    assume(a_chr_str != '\\\x00')
+    assume(chr_str != '\\\x00')
     #
     return {"inputs": chr_str,
             "label": label,
