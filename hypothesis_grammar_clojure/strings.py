@@ -1,11 +1,8 @@
 from hypothesis.strategies import characters, integers
 from hypothesis.strategies import composite, lists
 
-from .loader import verify_fns, label_for
-import os
-name = os.path.splitext(os.path.basename(__file__))[0]
-verify, _ = verify_fns(name)
-label = label_for(name)
+from label.strings import label
+from verify.strings import verify
 
 def build_string_str(item):
     return item["inputs"]

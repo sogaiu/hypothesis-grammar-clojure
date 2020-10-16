@@ -10,11 +10,11 @@ from .symbols import symbol_items
 
 from .separators import separator_strings
 
-from .loader import verify_fns, label_for
-verify_atom, _ = verify_fns("metadata_atom")
-verify_coll, _ = verify_fns("metadata_coll")
-md_label = label_for("metadata")
-old_md_label = label_for("old_metadata")
+from label.metadata import label as md_label
+from label.old_metadata import label as old_md_label
+from verify.metadata_atom import verify as verify_atom
+from verify.metadata_coll import verify as verify_coll
+
 # XXX: kind of hacky...
 if md_label is None:
     md_label = "metadata"

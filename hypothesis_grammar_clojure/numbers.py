@@ -3,11 +3,8 @@ from hypothesis.strategies import composite, just, lists, one_of
 
 from .util import to_ascii
 
-from .loader import verify_fns, label_for
-import os
-name = os.path.splitext(os.path.basename(__file__))[0]
-verify, _ = verify_fns(name)
-label = label_for(name)
+from label.numbers import label
+from verify.numbers import verify
 
 def build_num_str(item):
     return item["inputs"]

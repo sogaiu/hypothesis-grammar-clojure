@@ -2,11 +2,8 @@ from hypothesis.strategies import composite, just, one_of
 
 from .symbols import symbol_items
 
-from .loader import verify_fns, label_for
-import os
-name = os.path.splitext(os.path.basename(__file__))[0]
-verify, _ = verify_fns(name)
-label = label_for(name)
+from label.symbolic_values import label
+from verify.symbolic_values import verify
 
 marker = '##'
 

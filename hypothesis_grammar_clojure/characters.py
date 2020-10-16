@@ -4,11 +4,8 @@ from hypothesis.strategies import composite, just, lists, one_of
 
 from .util import to_ascii
 
-from .loader import verify_fns, label_for
-import os
-name = os.path.splitext(os.path.basename(__file__))[0]
-verify, _ = verify_fns(name)
-label = label_for(name)
+from label.characters import label
+from verify.characters import verify
 
 def build_chr_str(item):
     return item["inputs"]

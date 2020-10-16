@@ -1,10 +1,7 @@
 from hypothesis.strategies import composite, just, one_of
 
-from .loader import verify_fns, label_for
-import os
-name = os.path.splitext(os.path.basename(__file__))[0]
-verify, _ = verify_fns(name)
-label = label_for(name)
+from label.booleans import label
+from verify.booleans import verify
 
 def build_boolean_str(item):
     return item["inputs"]

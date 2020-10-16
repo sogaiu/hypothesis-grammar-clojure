@@ -1,11 +1,8 @@
 from hypothesis.strategies import integers, lists
 from hypothesis.strategies import composite, sampled_from
 
-from .loader import verify_fns, label_for
-import os
-name = os.path.splitext(os.path.basename(__file__))[0]
-verify, _ = verify_fns(name)
-label = label_for(name)
+from label.whitespace import label
+from verify.whitespace import verify
 
 def build_whitespace_str(item):
     return item["inputs"]

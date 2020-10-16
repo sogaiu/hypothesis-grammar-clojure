@@ -9,11 +9,8 @@ from .lists import list_items
 from .read_conds import read_cond_items
 from .symbols import symbol_items
 
-from .loader import verify_fns, label_for
-import os
-name = os.path.splitext(os.path.basename(__file__))[0]
-verify, verify_with_metadata = verify_fns(name)
-label = label_for(name)
+from label.eval_forms import label
+from verify.eval_forms import verify, verify_with_metadata
 
 from .util import make_form_with_metadata_str_builder
 

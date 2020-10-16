@@ -5,11 +5,8 @@ from .parameters import metadata_max
 
 from .forms import form_items
 
-from .loader import verify_fns, label_for
-import os
-name = os.path.splitext(os.path.basename(__file__))[0]
-verify, verify_with_metadata = verify_fns(name)
-label = label_for(name)
+from label.var_quote_forms import label
+from verify.var_quote_forms import verify, verify_with_metadata
 
 from .util import make_form_with_metadata_str_builder
 

@@ -1,0 +1,2 @@
+label = "anon_func"
+

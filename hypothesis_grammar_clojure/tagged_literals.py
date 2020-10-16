@@ -10,11 +10,8 @@ from .forms import form_items
 
 from .separators import separator_strings
 
-from .loader import verify_fns, label_for
-import os
-name = os.path.splitext(os.path.basename(__file__))[0]
-verify, verify_with_metadata = verify_fns(name)
-label = label_for(name)
+from label.tagged_literals import label
+from verify.tagged_literals import verify, verify_with_metadata
 
 from .util import make_form_with_metadata_str_builder
 

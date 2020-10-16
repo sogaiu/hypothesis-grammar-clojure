@@ -1,0 +1,1 @@
+label = "tagged_literal"

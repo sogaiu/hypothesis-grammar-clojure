@@ -4,11 +4,8 @@ from hypothesis.strategies import composite, lists, one_of, sampled_from
 
 import re
 
-from .loader import verify_fns, label_for
-import os
-name = os.path.splitext(os.path.basename(__file__))[0]
-verify, _ = verify_fns(name)
-label = label_for(name)
+from label.keywords import label
+from verify.keywords import verify
 
 def build_kwd_str(item):
     return item["inputs"]
