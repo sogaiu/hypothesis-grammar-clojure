@@ -1,11 +1,25 @@
-import re
-
 from hypothesis import assume
 from hypothesis.strategies import integers
-from hypothesis.strategies import composite, lists, sampled_from
+from hypothesis.strategies import composite, lists, one_of, sampled_from
+
+import re
+
+from .parameters import metadata_max
+
+from .loader import verify_fns, label_for
+import os
+name = os.path.splitext(os.path.basename(__file__))[0]
+verify, verify_with_metadata = verify_fns(name)
+label = label_for(name)
+
+from .util import make_form_with_metadata_str_builder
+
+def build_sym_str(item):
+    return item["inputs"]
 
 @composite
-def unqualified_symbol_as_str(draw):
+def unqualified_symbol_items(draw):
+    sym_str = draw(unqualified_symbol_as_str())
     # XXX: ignoring non-ascii
     ok_in_head = ["*", "+", "!", "-", "_",
                   "?", "<", ">", "=",
@@ -57,10 +71,15 @@ def unqualified_symbol_as_str(draw):
         if (head_char == "+") or (head_char == "-"):
             assume(not(re.search("^[0-9]$", sym_body[0])))
     #
-    return f'{head_char}{sym_body}'
+    sym_str = f'{head_char}{sym_body}'
+    #
+    return {"inputs": sym_str,
+            "label": label,
+            "to_str": build_sym_str,
+            "verify": verify}
 
 @composite
-def qualified_symbol_as_str(draw):
+def qualified_symbol_items(draw):
     # XXX: ignoring on-ascii
     ok_in_head = ["*", "+", "!", "-", "_",
                   "?", "<", ">", "=",
@@ -107,4 +126,39 @@ def qualified_symbol_as_str(draw):
     #
     uq_sym = draw(unqualified_symbol_as_str())
     #
-    return f'{head_char}{sym_body}/{uq_sym}'
+    sym_str = f'{head_char}{sym_body}/{uq_sym}'
+    #
+    return {"inputs": sym_str,
+            "label": label,
+            "to_str": build_sym_str,
+            "verify": verify}
+
+@composite
+def symbol_items(draw, metadata=False):
+    # avoid circular dependency
+    from .metadata import metadata_items, check_metadata_flavor
+    #
+    check_metadata_flavor(metadata)
+    #
+    sym_item = draw(one_of(unqualified_symbol_items(),
+                           qualified_symbol_items()))
+    #
+    if not metadata:
+        return sym_item
+    else:
+        # XXX: not sure about this approach
+        sym_str = sym_item["to_str"](sym_item)
+        #
+        str_builder = make_form_with_metadata_str_builder(build_sym_str)
+        #
+        n = draw(integers(min_value=1, max_value=metadata_max))
+        #
+        md_items = \
+            draw(lists(elements=metadata_items(flavor=metadata),
+                       min_size=n, max_size=n))
+        #
+        return {"inputs": sym_str,
+                "label": label,
+                "to_str": str_builder,
+                "verify": verify_with_metadata,
+                "metadata": md_items}

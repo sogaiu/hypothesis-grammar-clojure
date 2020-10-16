@@ -1,8 +1,17 @@
-import re
-
 from hypothesis import assume
 from hypothesis.strategies import integers
 from hypothesis.strategies import composite, lists, one_of, sampled_from
+
+import re
+
+from .loader import verify_fns, label_for
+import os
+name = os.path.splitext(os.path.basename(__file__))[0]
+verify, _ = verify_fns(name)
+label = label_for(name)
+
+def build_kwd_str(item):
+    return item["inputs"]
 
 @composite
 def unqualified_keyword_no_sigil_as_str(draw):
@@ -54,18 +63,28 @@ def unqualified_keyword_no_sigil_as_str(draw):
     return f'{head_char}{kwd_body}'
 
 @composite
-def unqualified_keyword_as_str(draw):
-    uq_kwd_no_sig = draw(unqualified_keyword_no_sigil_as_str())
-    #
-    return f':{uq_kwd_no_sig}'
-
-@composite
-def unqualified_auto_resolved_keyword_as_str(draw):
+def unqualified_auto_resolved_keyword_items(draw):
     uq_kwd_no_sig = draw(unqualified_keyword_no_sigil_as_str())
     # clojure repl rejects ::/
     assume(uq_kwd_no_sig != "/")
     #
-    return f'::{uq_kwd_no_sig}'
+    kwd_str = f'::{uq_kwd_no_sig}'
+    #
+    return {"inputs": kwd_str,
+            "label": label,
+            "to_str": build_kwd_str,
+            "verify": verify}
+
+@composite
+def unqualified_keyword_items(draw):
+    uq_kwd_no_sig = draw(unqualified_keyword_no_sigil_as_str())
+    #
+    kwd_str = f':{uq_kwd_no_sig}'
+    #
+    return {"inputs": kwd_str,
+            "label": label,
+            "to_str": build_kwd_str,
+            "verify": verify}
 
 @composite
 def keyword_ns_as_str(draw):
@@ -109,29 +128,33 @@ def keyword_ns_as_str(draw):
     return f'{head_char}{kwd_body}'
 
 @composite
-def qualified_keyword_as_str(draw):
+def qualified_auto_resolved_keyword_items(draw):
     kwd_ns = draw(keyword_ns_as_str())
     uq_kwd_no_sig = draw(unqualified_keyword_no_sigil_as_str())
     #
-    return f':{kwd_ns}/{uq_kwd_no_sig}'
+    kwd_str =  f'::{kwd_ns}/{uq_kwd_no_sig}'
+    #
+    return {"inputs": kwd_str,
+            "label": label,
+            "to_str": build_kwd_str,
+            "verify": verify}
 
 @composite
-def qualified_auto_resolved_keyword_as_str(draw):
+def qualified_keyword_items(draw):
     kwd_ns = draw(keyword_ns_as_str())
     uq_kwd_no_sig = draw(unqualified_keyword_no_sigil_as_str())
     #
-    return f'::{kwd_ns}/{uq_kwd_no_sig}'
+    kwd_str = f':{kwd_ns}/{uq_kwd_no_sig}'
+    #
+    return {"inputs": kwd_str,
+            "label": label,
+            "to_str": build_kwd_str,
+            "verify": verify}
 
 @composite
-def auto_resolved_keyword_as_str(draw):
-    kwd = draw(one_of(unqualified_auto_resolved_keyword_as_str(),
-                      qualified_auto_resolved_keyword_as_str()))
-    return kwd
-
-@composite
-def keyword_as_str(draw):
-    kwd = draw(one_of(unqualified_auto_resolved_keyword_as_str(),
-                      unqualified_keyword_as_str(),
-                      qualified_auto_resolved_keyword_as_str(),
-                      qualified_keyword_as_str()))
-    return kwd
+def keyword_items(draw):
+    kwd_item = draw(one_of(unqualified_auto_resolved_keyword_items(),
+                           unqualified_keyword_items(),
+                           qualified_auto_resolved_keyword_items(),
+                           qualified_keyword_items()))
+    return kwd_item

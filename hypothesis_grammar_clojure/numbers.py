@@ -1,28 +1,19 @@
 from hypothesis.strategies import booleans, integers
 from hypothesis.strategies import composite, just, lists, one_of
 
-from .utils import to_ascii
+from .util import to_ascii
+
+from .loader import verify_fns, label_for
+import os
+name = os.path.splitext(os.path.basename(__file__))[0]
+verify, _ = verify_fns(name)
+label = label_for(name)
+
+def build_num_str(item):
+    return item["inputs"]
 
 @composite
-def radix_number_as_str(draw):
-    sign = draw(one_of(just(""), just("+"), just("-")))
-    #
-    radix = draw(integers(min_value=2, max_value=36))
-    #
-    r_or_R = draw(one_of(just("R"), just("r")))
-    # XXX: too many digits is a problem
-    n = draw(integers(min_value=1, max_value=20))
-    pre_digits = draw(lists(elements=integers(min_value=0,
-                                              max_value=radix - 1),
-                            min_size=n, max_size=n))
-    caps = draw(lists(elements=booleans(),
-                      min_size=n, max_size=n))
-    digits = map(to_ascii, pre_digits, caps)
-    #
-    return f'{sign}{radix}{r_or_R}{"".join(digits)}'
-
-@composite
-def hex_number_as_str(draw):
+def hex_number_items(draw):
     sign = draw(one_of(just(""), just("+"), just("-")))
     #
     x_or_X = draw(one_of(just("X"), just("x")))
@@ -37,10 +28,15 @@ def hex_number_as_str(draw):
     #
     end_n = draw(one_of(just(""), just("N")))
     #
-    return f'{sign}0{x_or_X}{"".join(digits)}{end_n}'
+    num_str = f'{sign}0{x_or_X}{"".join(digits)}{end_n}'
+    #
+    return {"inputs": num_str,
+            "label": label,
+            "to_str": build_num_str,
+            "verify": verify}
 
 @composite
-def octal_number_as_str(draw):
+def octal_number_items(draw):
     sign = draw(one_of(just(""), just("+"), just("-")))
     # XXX: too many digits is a problem
     n = draw(integers(min_value=1, max_value=20))
@@ -51,19 +47,52 @@ def octal_number_as_str(draw):
     #
     m_or_n = draw(one_of(just(""), just("M"), just("N")))
     #
-    return f'{sign}0{"".join(digits)}{m_or_n}'
+    num_str = f'{sign}0{"".join(digits)}{m_or_n}'
+    #
+    return {"inputs": num_str,
+            "label": label,
+            "to_str": build_num_str,
+            "verify": verify}
 
 @composite
-def ratio_as_str(draw):
+def radix_number_items(draw):
+    sign = draw(one_of(just(""), just("+"), just("-")))
+    #
+    radix = draw(integers(min_value=2, max_value=36))
+    #
+    r_or_R = draw(one_of(just("R"), just("r")))
+    # XXX: too many digits is a problem
+    n = draw(integers(min_value=1, max_value=20))
+    pre_digits = draw(lists(elements=integers(min_value=0,
+                                              max_value=radix - 1),
+                            min_size=n, max_size=n))
+    caps = draw(lists(elements=booleans(),
+                      min_size=n, max_size=n))
+    digits = map(to_ascii, pre_digits, caps)
+    #
+    num_str = f'{sign}{radix}{r_or_R}{"".join(digits)}'
+    #
+    return {"inputs": num_str,
+            "label": label,
+            "to_str": build_num_str,
+            "verify": verify}
+
+@composite
+def ratio_items(draw):
     sign = draw(one_of(just(""), just("+"), just("-")))
     #
     p = draw(integers(min_value=0))
     q = draw(integers(min_value=1))
     #
-    return f'{sign}{p}/{q}'
+    num_str = f'{sign}{p}/{q}'
+    #
+    return {"inputs": num_str,
+            "label": label,
+            "to_str": build_num_str,
+            "verify": verify}
 
 @composite
-def double_as_str(draw):
+def double_items(draw):
     sign = draw(one_of(just(""), just("+"), just("-")))
     #
     left_of_dot = draw(integers(min_value=0))
@@ -85,25 +114,34 @@ def double_as_str(draw):
     #
     end_m = draw(one_of(just(""), just("M")))
     #
-    return f'{sign}{left_of_dot}{dot_part}{exp_part}{end_m}'
+    num_str = f'{sign}{left_of_dot}{dot_part}{exp_part}{end_m}'
+    #
+    return {"inputs": num_str,
+            "label": label,
+            "to_str": build_num_str,
+            "verify": verify}
 
 @composite
-def integer_as_str(draw):
+def integer_items(draw):
     sign = draw(one_of(just(""), just("+"), just("-")))
     #
     i = draw(integers(min_value=0))
     #
     m_or_n = draw(one_of(just(""), just("M"), just("N")))
     #
-    return f'{sign}{i}{m_or_n}'
+    num_str = f'{sign}{i}{m_or_n}'
+    #
+    return {"inputs": num_str,
+            "label": label,
+            "to_str": build_num_str,
+            "verify": verify}
 
 @composite
-def number_as_str(draw):
-    number = draw(one_of(radix_number_as_str(),
-                         hex_number_as_str(),
-                         octal_number_as_str(),
-                         ratio_as_str(),
-                         double_as_str(),
-                         integer_as_str()))
-    #
-    return number
+def number_items(draw):
+    num_item = draw(one_of(radix_number_items(),
+                           hex_number_items(),
+                           octal_number_items(),
+                           ratio_items(),
+                           double_items(),
+                           integer_items()))
+    return num_item

@@ -5,46 +5,46 @@ __version__ = '0.0.1'
 # grammatical pieces
 #
 # subatomic (1)
-#   auto_res_marker
+#   + auto_res_marker
 #
 # atomic (10)
-#   boolean
+#   + boolean
 #   + character
-#   comment
+#   + comment
 #   + keyword
-#   nil
+#   + nil
 #   + number
-#   regex
+#   + regex
 #   + string
 #   + symbol
-#   symbolic_value
+#   + symbolic_value
 #
 # collection-like (8)
-#   anon_func
-#   list
-#   map
-#   namespaced_map
-#   read_cond
-#   read_cond_splicing
-#   set
-#   vector
+#   + anon_func
+#   + list
+#   + map
+#   + namespaced_map
+#   + read_cond
+#   + read_cond_splicing
+#   + set
+#   + vector
 #
 # adorned form (7)
-#   deref_form
-#   eval_form
-#   quote_form
-#   syntax_quote_form
-#   unquote_form
-#   unquote_splicing_form
-#   var_quote_form
+#   + deref_form
+#   + eval_form
+#   + quote_form
+#   + syntax_quote_form
+#   + unquote_form
+#   + unquote_splicing_form
+#   + var_quote_form
 #
 # other (2)
-#   discard_expr
-#   tagged_literal
+#   + discard_expr
+#   + tagged_literal
 #
 # compound but not standalone (2)
-#   metadata
-#   old_metadata
+#   + metadata
+#   + old_metadata
 
 # potential users
 #
