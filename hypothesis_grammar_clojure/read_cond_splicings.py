@@ -47,6 +47,9 @@ def read_cond_splicing_items(draw, metadata=False):
     #
     sep_strs = draw(lists(elements=separator_strings(),
                           min_size=2*n, max_size=2*n))
+    if n > 0:
+        sep_strs = sep_strs[:-1] + [""]
+    #
     items = [item
              for pair in zip(kwd_items, frm_items)
              for item in pair]

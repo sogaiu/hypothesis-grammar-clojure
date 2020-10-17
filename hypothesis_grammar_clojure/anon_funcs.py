@@ -39,6 +39,9 @@ def anon_func_items(draw, metadata=False):
     #
     sep_strs = draw(lists(elements=separator_strings(),
                           min_size=n, max_size=n))
+    if n > 0:
+        sep_strs = sep_strs[:-1] + [""]
+    #
     if not metadata:
         return {"inputs": items,
                 "label": label,
