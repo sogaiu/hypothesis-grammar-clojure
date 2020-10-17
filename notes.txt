@@ -1,0 +1,34 @@
+# XXX: try to separate out tree-sitter-specific bits from strategies
+#      and figure out how to provide them generically.  e.g.
+#      any_character_items currently filters out null bytes, but
+#      this limitation is specific to tree-sitter
+
+# XXX: expose more knobs to allow testers control
+#
+#        move parameters to own package (like verify and label?)
+
+# XXX: improve separator support
+#
+#        before and after delimiters, how to support
+#        identify missing locations
+
+# XXX: verify limitations
+#
+#        no support for #! comments
+#        any_character definition is unverified
+#        keywords do not handle non-ascii
+#        symbols do not handle non-ascii
+#        no escape sequences in strings
+#        whitespace is limited to ascii -- is non-ascii whitespace legal?
+#        parameter-tweaking (e.g. number of digits) unexposed
+
+# XXX: write up some notes on naming.  could cover terms such as:
+#
+#        marker (meaning things like "#_", "##", etc.)
+#        metadatee
+#        form
+#        non-form (separators?)
+
+# XXX: consider saving generated source strings to feed to a "jailed"
+#      clojure process (e.g. in a vm) and log which strings cause
+#      parsing issues.
