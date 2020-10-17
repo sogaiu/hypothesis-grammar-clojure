@@ -18,49 +18,49 @@ __version__ = '0.0.1'
 
 # XXX: there might be some things missing from below
 
-from hypothesis_grammar_clojure.comments import comment_items
+from .comments import comment_items
 #
-from hypothesis_grammar_clojure.nils import nil_items
-from hypothesis_grammar_clojure.booleans import boolean_items
-from hypothesis_grammar_clojure.characters import character_items
-from hypothesis_grammar_clojure.keywords import keyword_items
-from hypothesis_grammar_clojure.numbers import number_items
-from hypothesis_grammar_clojure.strings import string_items
-from hypothesis_grammar_clojure.symbols import symbol_items
-from hypothesis_grammar_clojure.symbolic_values import symbolic_value_items
-from hypothesis_grammar_clojure.regex import regex_items
+from .nils import nil_items
+from .booleans import boolean_items
+from .characters import character_items
+from .keywords import keyword_items
+from .numbers import number_items
+from .strings import string_items
+from .symbols import symbol_items
+from .symbolic_values import symbolic_value_items
+from .regex import regex_items
 #
-from hypothesis_grammar_clojure.atoms import atom_items
+from .atoms import atom_items
 #
-from hypothesis_grammar_clojure.lists import list_items
-from hypothesis_grammar_clojure.maps import map_items
-from hypothesis_grammar_clojure.namespaced_maps import namespaced_map_items
-from hypothesis_grammar_clojure.sets import set_items
-from hypothesis_grammar_clojure.vectors import vector_items
+from .lists import list_items
+from .maps import map_items
+from .namespaced_maps import namespaced_map_items
+from .sets import set_items
+from .vectors import vector_items
 #
-from hypothesis_grammar_clojure.collections import collection_items, \
+from .collections import collection_items, \
     recursive_collection_items
 #
-from hypothesis_grammar_clojure.read_conds import read_cond_items
-from hypothesis_grammar_clojure.read_cond_splicings import \
+from .read_conds import read_cond_items
+from .read_cond_splicings import \
     read_cond_splicing_items
 #
-from hypothesis_grammar_clojure.anon_funcs import anon_func_items
+from .anon_funcs import anon_func_items
 #
-from hypothesis_grammar_clojure.deref_forms import deref_form_items
-from hypothesis_grammar_clojure.var_quote_forms import var_quote_form_items
-from hypothesis_grammar_clojure.eval_forms import eval_form_items
-from hypothesis_grammar_clojure.quote_forms import quote_form_items
-from hypothesis_grammar_clojure.syntax_quote_forms import \
+from .deref_forms import deref_form_items
+from .var_quote_forms import var_quote_form_items
+from .eval_forms import eval_form_items
+from .quote_forms import quote_form_items
+from .syntax_quote_forms import \
     syntax_quote_form_items
-from hypothesis_grammar_clojure.unquote_forms import unquote_form_items
-from hypothesis_grammar_clojure.unquote_splicing_forms import \
+from .unquote_forms import unquote_form_items
+from .unquote_splicing_forms import \
     unquote_splicing_form_items
 #
-from hypothesis_grammar_clojure.tagged_literals import tagged_literal_items
+from .tagged_literals import tagged_literal_items
 #
-from hypothesis_grammar_clojure.discard_exprs import discard_expr_items
+from .discard_exprs import discard_expr_items
 #
-from hypothesis_grammar_clojure.forms import form_items
+from .forms import form_items
 #
-from hypothesis_grammar_clojure.metadata import metadata_items
+from .metadata import metadata_items
