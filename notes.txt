@@ -5,8 +5,8 @@
 
 # XXX: expose more knobs to allow testers control
 #
-#        move parameters to own package (like verify and label?)
-#        put label, verify, etc. under one directory?
+#        make a list of candidates
+#        parameters for strategies
 
 # XXX: improve separator support
 #
@@ -20,7 +20,7 @@
 #        keywords do not handle non-ascii
 #        symbols do not handle non-ascii
 #        no escape sequences in strings
-#        whitespace is limited to ascii -- is non-ascii whitespace legal?
+#        whitespace is limited to ascii -- java.lang.Character isWhitespace
 #        parameter-tweaking (e.g. number of digits) unexposed
 
 # XXX: write up some notes on naming.  could cover terms such as:
