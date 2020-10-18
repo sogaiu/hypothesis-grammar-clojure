@@ -7,21 +7,43 @@
 #
 #        make a list of candidates
 #        parameters for strategies
+#          keyword - number of characters
+#          numbers - number of digits
 
 # XXX: improve separator support
 #
 #        before and after delimiters, how to support
 #        identify (and name / describe?) missing locations
+#        discard_* in separators and prepending space work-around
+#        namespaced_map between prefix_str and open_delim?
+#        between marker and rest of form
+#          deref_form
+#          eval_form
+#          metadata and old_metadata
+#          quote_form
+#          read_cond
+#          read_cond_splicing
+#          symbolic_value
+#          syntax_quote_form
+#          tagged_literal (slightly different from rest -- see code)
+#          unquote_form (slightly different from rest -- see code)
+#          unquote_splicing_form
+#          var_quote_form
 
 # XXX: verify limitations
 #
 #        no support for #! comments
 #        any_character definition is unverified
-#        keywords do not handle non-ascii
-#        symbols do not handle non-ascii
-#        no escape sequences in strings
-#        whitespace is limited to ascii -- java.lang.Character isWhitespace
-#        parameter-tweaking (e.g. number of digits) unexposed
+#        keywords
+#          limited to ascii
+#        symbols
+#          limited to ascii range
+#        strings
+#          no escape sequences
+#          limited to ascii
+#        whitespace
+#          limited to ascii -- java.lang.Character isWhitespace
+#        coll_max must be even atm
 
 # XXX: write up some notes on naming.  could cover terms such as:
 #
