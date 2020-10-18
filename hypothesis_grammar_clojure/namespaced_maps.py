@@ -18,6 +18,7 @@ open_delim = "{"
 close_delim = "}"
 
 # XXX: could also have stuff before and after delimiters
+# XXX: #:: {}, #:user {} also legit...
 def build_namespaced_map_str(namespaced_map_item):
     items = namespaced_map_item["inputs"]
     seps = namespaced_map_item["separators"]
