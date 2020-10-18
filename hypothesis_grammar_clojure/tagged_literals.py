@@ -2,16 +2,15 @@ from hypothesis import assume
 from hypothesis.strategies import integers
 from hypothesis.strategies import composite, lists, sampled_from
 
-from .parameters import metadata_max
-
 from .symbols import symbol_items
 
 from .forms import form_items
 
 from .separators import separator_strings
 
-from label.tagged_literals import label
-from verify.tagged_literals import verify, verify_with_metadata
+from custom.label.tagged_literals import label
+from custom.verify.tagged_literals import verify, verify_with_metadata
+from custom.parameters import metadata_max
 
 from .util import make_form_with_metadata_str_builder
 

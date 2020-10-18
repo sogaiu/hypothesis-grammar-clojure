@@ -8,10 +8,10 @@ from .read_conds import read_cond_items
 from .strings import string_items
 from .symbols import symbol_items
 
-from label.metadata import label as md_label
-from label.old_metadata import label as old_md_label
-from verify.metadata_atom import verify as verify_atom
-from verify.metadata_coll import verify as verify_coll
+from custom.label.metadata import label as md_label
+from custom.label.old_metadata import label as old_md_label
+from custom.verify.metadata_atom import verify as verify_atom
+from custom.verify.metadata_coll import verify as verify_coll
 
 # XXX: kind of hacky...
 if md_label is None:

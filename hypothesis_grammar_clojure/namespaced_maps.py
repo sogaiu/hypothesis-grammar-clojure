@@ -1,16 +1,15 @@
 from hypothesis.strategies import integers
 from hypothesis.strategies import composite, just, lists, one_of
 
-from .parameters import coll_max, metadata_max
-
 from .auto_res_markers import auto_res_marker_items
 from .forms import form_items
 from .keywords import keyword_items
 
 from .separators import separator_strings
 
-from label.namespaced_maps import label
-from verify.namespaced_maps import verify, verify_with_metadata
+from custom.label.namespaced_maps import label
+from custom.verify.namespaced_maps import verify, verify_with_metadata
+from custom.parameters import coll_max, metadata_max
 
 from .util import make_form_with_metadata_str_builder
 

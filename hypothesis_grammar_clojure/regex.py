@@ -2,8 +2,8 @@ from hypothesis.strategies import composite
 
 from .strings import string_items
 
-from label.regex import label
-from verify.regex import verify
+from custom.label.regex import label
+from custom.verify.regex import verify
 
 marker = '#'
 

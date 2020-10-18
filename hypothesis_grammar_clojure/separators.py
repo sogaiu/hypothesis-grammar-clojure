@@ -1,11 +1,11 @@
 from hypothesis.strategies import integers
 from hypothesis.strategies import composite, lists, one_of
 
-from .parameters import sep_max
-
 from .whitespace import whitespace_items
 from .comments import comment_items
 from .discard_exprs import discard_expr_items
+
+from custom.parameters import sep_max
 
 @composite
 def whitespace_strings(draw):

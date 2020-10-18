@@ -1,8 +1,8 @@
 from hypothesis.strategies import characters, integers
 from hypothesis.strategies import composite, lists
 
-from label.comments import label
-from verify.comments import verify
+from custom.label.comments import label
+from custom.verify.comments import verify
 
 def build_comment_str(item):
     return item["inputs"]

@@ -1,8 +1,8 @@
 from hypothesis.strategies import integers, lists
 from hypothesis.strategies import composite, sampled_from
 
-from label.whitespace import label
-from verify.whitespace import verify
+from custom.label.whitespace import label
+from custom.verify.whitespace import verify
 
 def build_whitespace_str(item):
     return item["inputs"]

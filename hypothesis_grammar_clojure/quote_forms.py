@@ -1,12 +1,11 @@
 from hypothesis.strategies import integers
 from hypothesis.strategies import composite, lists
 
-from .parameters import metadata_max
-
 from .forms import form_items
 
-from label.quote_forms import label
-from verify.quote_forms import verify, verify_with_metadata
+from custom.label.quote_forms import label
+from custom.verify.quote_forms import verify, verify_with_metadata
+from custom.parameters import metadata_max
 
 from .util import make_form_with_metadata_str_builder
 

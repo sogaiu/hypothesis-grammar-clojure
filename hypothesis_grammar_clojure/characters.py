@@ -4,8 +4,8 @@ from hypothesis.strategies import composite, just, lists, one_of
 
 from .util import to_ascii
 
-from label.characters import label
-from verify.characters import verify
+from custom.label.characters import label
+from custom.verify.characters import verify
 
 def build_chr_str(item):
     return item["inputs"]

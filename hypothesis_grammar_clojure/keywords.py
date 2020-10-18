@@ -4,8 +4,8 @@ from hypothesis.strategies import composite, lists, one_of, sampled_from
 
 import re
 
-from label.keywords import label
-from verify.keywords import verify
+from custom.label.keywords import label
+from custom.verify.keywords import verify
 
 def build_kwd_str(item):
     return item["inputs"]

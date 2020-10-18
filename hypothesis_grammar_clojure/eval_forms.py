@@ -1,16 +1,15 @@
 from hypothesis.strategies import integers
 from hypothesis.strategies import composite, lists, one_of
 
-from .parameters import metadata_max
-
 from .forms import form_items
 
 from .lists import list_items
 from .read_conds import read_cond_items
 from .symbols import symbol_items
 
-from label.eval_forms import label
-from verify.eval_forms import verify, verify_with_metadata
+from custom.label.eval_forms import label
+from custom.verify.eval_forms import verify, verify_with_metadata
+from custom.parameters import metadata_max
 
 from .util import make_form_with_metadata_str_builder
 

@@ -3,8 +3,8 @@ from hypothesis.strategies import composite, just, lists, one_of
 
 from .util import to_ascii
 
-from label.numbers import label
-from verify.numbers import verify
+from custom.label.numbers import label
+from custom.verify.numbers import verify
 
 def build_num_str(item):
     return item["inputs"]

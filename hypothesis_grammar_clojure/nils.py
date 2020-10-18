@@ -1,7 +1,7 @@
 from hypothesis.strategies import composite, just
 
-from label.nils import label
-from verify.nils import verify
+from custom.label.nils import label
+from custom.verify.nils import verify
 
 def build_nil_str(item):
     return item["inputs"]

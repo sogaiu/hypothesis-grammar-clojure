@@ -1,8 +1,8 @@
 from hypothesis.strategies import characters, integers
 from hypothesis.strategies import composite, lists
 
-from label.strings import label
-from verify.strings import verify
+from custom.label.strings import label
+from custom.verify.strings import verify
 
 def build_string_str(item):
     return item["inputs"]

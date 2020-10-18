@@ -1,7 +1,7 @@
 from hypothesis.strategies import composite, just, one_of
 
-from label.booleans import label
-from verify.booleans import verify
+from custom.label.booleans import label
+from custom.verify.booleans import verify
 
 def build_boolean_str(item):
     return item["inputs"]

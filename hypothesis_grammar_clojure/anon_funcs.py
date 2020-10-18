@@ -1,14 +1,13 @@
 from hypothesis.strategies import integers
 from hypothesis.strategies import composite, lists
 
-from .parameters import coll_max, metadata_max
-
 from .forms import form_items
 
 from .separators import separator_strings
 
-from label.anon_funcs import label
-from verify.anon_funcs import verify, verify_with_metadata
+from custom.label.anon_funcs import label
+from custom.verify.anon_funcs import verify, verify_with_metadata
+from custom.parameters import coll_max, metadata_max
 
 from .util import make_form_with_metadata_str_builder
 

@@ -2,8 +2,8 @@ from hypothesis.strategies import composite, just, one_of
 
 from .symbols import symbol_items
 
-from label.symbolic_values import label
-from verify.symbolic_values import verify
+from custom.label.symbolic_values import label
+from custom.verify.symbolic_values import verify
 
 marker = '##'
 

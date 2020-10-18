@@ -1,7 +1,7 @@
 from hypothesis.strategies import composite
 
-from label.discard_exprs import label
-from verify.discard_exprs import verify
+from custom.label.discard_exprs import label
+from custom.verify.discard_exprs import verify
 
 marker = '#_'
 

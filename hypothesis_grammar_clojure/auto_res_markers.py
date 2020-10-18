@@ -1,7 +1,7 @@
 from hypothesis.strategies import composite, just
 
-from label.auto_res_markers import label
-from verify.auto_res_markers import verify
+from custom.label.auto_res_markers import label
+from custom.verify.auto_res_markers import verify
 
 def build_auto_res_marker_str(item):
     # this is just "::"

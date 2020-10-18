@@ -4,10 +4,9 @@ from hypothesis.strategies import composite, lists, one_of, sampled_from
 
 import re
 
-from .parameters import metadata_max
-
-from label.symbols import label
-from verify.symbols import verify, verify_with_metadata
+from custom.label.symbols import label
+from custom.verify.symbols import verify, verify_with_metadata
+from custom.parameters import metadata_max
 
 from .util import make_form_with_metadata_str_builder
 
