@@ -6,6 +6,7 @@
 # XXX: expose more knobs to allow testers control
 #
 #        move parameters to own package (like verify and label?)
+#        put label, verify, etc. under one directory?
 
 # XXX: improve separator support
 #
