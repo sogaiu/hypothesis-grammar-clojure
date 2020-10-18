@@ -11,7 +11,7 @@
 # XXX: improve separator support
 #
 #        before and after delimiters, how to support
-#        identify missing locations
+#        identify (and name / describe?) missing locations
 
 # XXX: verify limitations
 #
