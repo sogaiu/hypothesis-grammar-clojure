@@ -38,12 +38,10 @@ from .namespaced_maps import namespaced_map_items
 from .sets import set_items
 from .vectors import vector_items
 #
-from .collections import collection_items, \
-    recursive_collection_items
+from .collections import collection_items, recursive_collection_items
 #
 from .read_conds import read_cond_items
-from .read_cond_splicings import \
-    read_cond_splicing_items
+from .read_cond_splicings import read_cond_splicing_items
 #
 from .anon_funcs import anon_func_items
 #
@@ -51,11 +49,9 @@ from .deref_forms import deref_form_items
 from .var_quote_forms import var_quote_form_items
 from .eval_forms import eval_form_items
 from .quote_forms import quote_form_items
-from .syntax_quote_forms import \
-    syntax_quote_form_items
+from .syntax_quote_forms import syntax_quote_form_items
 from .unquote_forms import unquote_form_items
-from .unquote_splicing_forms import \
-    unquote_splicing_form_items
+from .unquote_splicing_forms import unquote_splicing_form_items
 #
 from .tagged_literals import tagged_literal_items
 #
