@@ -27,7 +27,7 @@ def build_tagged_literal_str(tagged_literal_item):
     tag_str = tag_item["to_str"](tag_item)
     #
     # XXX: consider again later
-    #return "#" + seps[0] + tag_str + seps[1] + form_str
+    #return marker + seps[0] + tag_str + seps[1] + form_str
     return marker + tag_str + " " + form_str
 
 @composite
