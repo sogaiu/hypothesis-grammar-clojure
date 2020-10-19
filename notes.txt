@@ -1,3 +1,30 @@
+# XXX: consider different generator "profiles"
+#        some tooling oriented things may need to be tolerant
+#        might be helpful to have "strict" generators too
+
+# XXX: some generated strings are not legitimate clojure
+#
+#      some / all of the following may be examples (calva handles all):
+#
+#      #'()
+#      @"a"
+#      @#"b"
+#      @@#"c"
+#      @#?@()
+#      @[]
+#      @{}
+#      @#{}
+#      #'""
+#      #'#""
+#      '"a"
+#      `"b"
+#      ~"c"
+#      #'{}
+
+# XXX: consider saving generated source strings to feed to a "jailed"
+#      clojure process (e.g. in a vm) and log which strings cause
+#      parsing issues.
+
 # XXX: try to separate out tree-sitter-specific bits from strategies
 #      and figure out how to provide them generically.  e.g.
 #      any_character_items currently filters out null bytes, but
@@ -51,7 +78,3 @@
 #        metadatee
 #        form
 #        non-form (separators?)
-
-# XXX: consider saving generated source strings to feed to a "jailed"
-#      clojure process (e.g. in a vm) and log which strings cause
-#      parsing issues.
