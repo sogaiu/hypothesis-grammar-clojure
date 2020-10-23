@@ -55,7 +55,9 @@ def tag_items(draw):
     return tag_item
 
 @composite
-def tagged_literal_items(draw, metadata=False):
+def tagged_literal_items(draw,
+                         separators=separator_strings(),
+                         metadata=False):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
@@ -65,7 +67,7 @@ def tagged_literal_items(draw, metadata=False):
     #
     tag_item = draw(tag_items())
     #
-    sep_strs = draw(lists(elements=separator_strings(),
+    sep_strs = draw(lists(elements=separators,
                           min_size=2, max_size=2))
     if not metadata:
         return {"inputs": form_item,

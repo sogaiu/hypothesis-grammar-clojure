@@ -25,7 +25,10 @@ def build_anon_func_str(anon_func_item):
     return marker + open_delim + "".join(anon_func_elts) + close_delim
 
 @composite
-def anon_func_items(draw, metadata=False):
+def anon_func_items(draw,
+                    elements=form_items(),
+                    separators=separator_strings(),
+                    metadata=False):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
@@ -33,10 +36,10 @@ def anon_func_items(draw, metadata=False):
     #
     n = draw(integers(min_value=0, max_value=coll_max))
     #
-    items = draw(lists(elements=form_items(),
+    items = draw(lists(elements=elements,
                        min_size=n, max_size=n))
     #
-    sep_strs = draw(lists(elements=separator_strings(),
+    sep_strs = draw(lists(elements=separators,
                           min_size=n, max_size=n))
     if n > 0:
         sep_strs = sep_strs[:-1] + [""]

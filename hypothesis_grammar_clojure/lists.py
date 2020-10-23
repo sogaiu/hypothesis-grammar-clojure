@@ -24,7 +24,10 @@ def build_list_str(list_item):
     return open_delim + "".join(list_elts) + close_delim
 
 @composite
-def list_items(draw, elements=form_items(), metadata=False):
+def list_items(draw,
+               elements=form_items(),
+               separators=separator_strings(),
+               metadata=False):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
@@ -34,7 +37,7 @@ def list_items(draw, elements=form_items(), metadata=False):
     #
     items = draw(lists(elements=elements, min_size=n, max_size=n))
     #
-    sep_strs = draw(lists(elements=separator_strings(),
+    sep_strs = draw(lists(elements=separators,
                           min_size=n, max_size=n))
     if n > 0:
         sep_strs = sep_strs[:-1] + [""]

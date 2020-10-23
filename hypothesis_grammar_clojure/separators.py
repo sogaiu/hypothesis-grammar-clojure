@@ -32,6 +32,18 @@ def discard_expr_and_ws_strings(draw):
     return " " + de_item["to_str"](de_item) + " "
 
 @composite
+def whitespace_separator_strings(draw):
+    n = draw(integers(min_value=1, max_value=sep_max))
+    #
+    seps = \
+        draw(lists(elements=whitespace_strings(),
+                   min_size=n, max_size=n))
+    #
+    sep_str = "".join(seps)
+    #
+    return sep_str
+
+@composite
 def separator_strings(draw):
     n = draw(integers(min_value=1, max_value=sep_max))
     #

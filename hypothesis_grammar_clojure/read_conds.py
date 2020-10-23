@@ -29,7 +29,10 @@ def build_read_cond_str(read_cond_item):
     return marker + "" + open_delim + "".join(read_cond_elts) + close_delim
 
 @composite
-def read_cond_items(draw, metadata=False):
+def read_cond_items(draw,
+                    elements=form_items(),
+                    separators=separator_strings(),
+                    metadata=False):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
@@ -40,10 +43,10 @@ def read_cond_items(draw, metadata=False):
     kwd_items = draw(lists(elements=keyword_items(),
                            min_size=n, max_size=n))
     #
-    frm_items = draw(lists(elements=form_items(),
+    frm_items = draw(lists(elements=elements,
                            min_size=n, max_size=n))
     #
-    sep_strs = draw(lists(elements=separator_strings(),
+    sep_strs = draw(lists(elements=separators,
                           min_size=2*n, max_size=2*n))
     if n > 0:
         sep_strs = sep_strs[:-1] + [""]

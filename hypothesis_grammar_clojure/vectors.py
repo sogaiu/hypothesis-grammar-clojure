@@ -24,7 +24,10 @@ def build_vector_str(vector_item):
     return open_delim + "".join(vector_elts) + close_delim
 
 @composite
-def vector_items(draw, elements=form_items(), metadata=False):
+def vector_items(draw,
+                 elements=form_items(),
+                 separators=separator_strings(),
+                 metadata=False):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
@@ -34,7 +37,7 @@ def vector_items(draw, elements=form_items(), metadata=False):
     #
     items = draw(lists(elements=elements, min_size=n, max_size=n))
     #
-    sep_strs = draw(lists(elements=separator_strings(),
+    sep_strs = draw(lists(elements=separators,
                           min_size=n, max_size=n))
     if n > 0:
         sep_strs = sep_strs[:-1] + [""]

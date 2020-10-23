@@ -39,7 +39,10 @@ def prefix_items(draw):
     return prefix_item
 
 @composite
-def namespaced_map_items(draw, elements=form_items(), metadata=False):
+def namespaced_map_items(draw,
+                         elements=form_items(),
+                         separators=separator_strings(),
+                         metadata=False):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
@@ -51,7 +54,7 @@ def namespaced_map_items(draw, elements=form_items(), metadata=False):
     #
     prefix_item = draw(prefix_items())
     #
-    sep_strs = draw(lists(elements=separator_strings(),
+    sep_strs = draw(lists(elements=separators,
                           min_size=n, max_size=n))
     if n > 0:
         sep_strs = sep_strs[:-1] + [""]
