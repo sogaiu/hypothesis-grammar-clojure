@@ -18,8 +18,9 @@ def comment_items(draw):
         draw(lists(elements=characters(blacklist_characters=skip_chars,
                                        min_codepoint=32, max_codepoint=127),
                    min_size=n, max_size=n))
-    #
-    cmt_str = ';' + "".join(chars)
+    # XXX: comment as last line in file does not end in newline, but not
+    #      handling that case
+    cmt_str = ';' + "".join(chars) + "\n"
     #
     return {"inputs": cmt_str,
             "label": label,

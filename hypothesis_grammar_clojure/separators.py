@@ -13,12 +13,11 @@ def whitespace_strings(draw):
     #
     return ws_item["to_str"](ws_item)
 
-# newline is appended so result can be used as a separator
 @composite
-def comment_and_nl_strings(draw):
+def comment_strings(draw):
     cmt_item = draw(comment_items())
     #
-    return cmt_item["to_str"](cmt_item) + "\n"
+    return cmt_item["to_str"](cmt_item)
 
 # space is appended so result can be used safely as a separator
 @composite
@@ -49,7 +48,7 @@ def separator_strings(draw):
     #
     seps = \
         draw(lists(elements=one_of(whitespace_strings(),
-                                   comment_and_nl_strings(),
+                                   comment_strings(),
                                    discard_expr_and_ws_strings()),
                    min_size=n, max_size=n))
     #
