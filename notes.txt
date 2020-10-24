@@ -2,6 +2,12 @@
 #        some tooling oriented things may need to be tolerant
 #        might be helpful to have "strict" generators too
 
+# XXX: whitespace options
+#
+#        only single space
+#        only ascii range
+#        all-out
+
 # XXX: some generated strings are not legitimate clojure
 #
 #      some / all of the following may be examples (calva handles all):
