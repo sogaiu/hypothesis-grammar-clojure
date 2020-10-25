@@ -8,7 +8,7 @@ def build_whitespace_str(item):
     return item["inputs"]
 
 @composite
-def whitespace_items(draw):
+def whitespace_items(draw, avoid_chars=[]):
     # see java.lang.Character isWhitespace
     allowed = [",", # clojure treats a comma as whitespace
                # space separators excluding U+00A0, U+2007, U+202F
@@ -32,6 +32,8 @@ def whitespace_items(draw):
                '\u001f',
                # other things with familiar names
                "\f", "\n", "\r", "\t"]
+    #
+    allowed = list(set(allowed) - set(avoid_chars))
     #
     n = draw(integers(min_value=1, max_value=19))
     #

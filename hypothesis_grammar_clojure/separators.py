@@ -8,8 +8,8 @@ from .discard_exprs import discard_expr_items
 from custom.parameters import sep_max
 
 @composite
-def whitespace_strings(draw):
-    ws_item = draw(whitespace_items())
+def whitespace_strings(draw, avoid_chars=[]):
+    ws_item = draw(whitespace_items(avoid_chars=avoid_chars))
     #
     return ws_item["to_str"](ws_item)
 
@@ -31,11 +31,11 @@ def discard_expr_and_ws_strings(draw):
     return " " + de_item["to_str"](de_item) + " "
 
 @composite
-def whitespace_separator_strings(draw):
+def whitespace_separator_strings(draw, avoid_chars=[]):
     n = draw(integers(min_value=1, max_value=sep_max))
     #
     seps = \
-        draw(lists(elements=whitespace_strings(),
+        draw(lists(elements=whitespace_strings(avoid_chars=avoid_chars),
                    min_size=n, max_size=n))
     #
     sep_str = "".join(seps)
@@ -43,11 +43,11 @@ def whitespace_separator_strings(draw):
     return sep_str
 
 @composite
-def separator_strings(draw):
+def separator_strings(draw, avoid_chars=[]):
     n = draw(integers(min_value=1, max_value=sep_max))
     #
     seps = \
-        draw(lists(elements=one_of(whitespace_strings(),
+        draw(lists(elements=one_of(whitespace_strings(avoid_chars=avoid_chars),
                                    comment_strings(),
                                    discard_expr_and_ws_strings()),
                    min_size=n, max_size=n))
