@@ -9,7 +9,7 @@ def build_comment_str(item):
 
 # XXX: #! type of comment is not implemented yet
 @composite
-def comment_items(draw):
+def comment_items(draw, trailing_newline=True):
     n = draw(integers(min_value=0, max_value=100))
     #
     skip_chars = ["\n", "\r"] # XXX: possibly \r is ok
@@ -18,9 +18,12 @@ def comment_items(draw):
         draw(lists(elements=characters(blacklist_characters=skip_chars,
                                        min_codepoint=32, max_codepoint=127),
                    min_size=n, max_size=n))
-    # XXX: comment as last line in file does not end in newline, but not
-    #      handling that case
-    cmt_str = ';' + "".join(chars) + "\n"
+    #
+    cmt_str = ';' + "".join(chars)
+    # comment as last line in file does not end in newline, but most of the
+    # rest of the time, there is a trailing newline
+    if trailing_newline:
+        cmt_str += "\n"
     #
     return {"inputs": cmt_str,
             "label": label,
