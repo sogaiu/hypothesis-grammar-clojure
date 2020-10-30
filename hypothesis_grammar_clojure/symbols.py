@@ -133,31 +133,37 @@ def qualified_symbol_items(draw):
             "verify": verify}
 
 @composite
-def symbol_items(draw, metadata=False):
+def bare_symbol_items(draw):
+    sym_item = draw(one_of(unqualified_symbol_items(),
+                           qualified_symbol_items()))
+    return sym_item
+
+@composite
+def symbol_with_metadata_items(draw, metadata="metadata"):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
     check_metadata_flavor(metadata)
     #
-    sym_item = draw(one_of(unqualified_symbol_items(),
-                           qualified_symbol_items()))
+    sym_item = draw(bare_symbol_items())
     #
+    str_builder = make_form_with_metadata_str_builder(build_sym_str)
+    #
+    n = draw(integers(min_value=1, max_value=metadata_max))
+    #
+    md_items = \
+        draw(lists(elements=metadata_items(flavor=metadata),
+                   min_size=n, max_size=n))
+    #
+    sym_item.update({"to_str": str_builder,
+                     "verify": verify_with_metadata,
+                     "metadata": md_items})
+    #
+    return sym_item
+
+@composite
+def symbol_items(draw, metadata=False):
     if not metadata:
-        return sym_item
+        return draw(bare_symbol_items())
     else:
-        # XXX: not sure about this approach
-        sym_str = sym_item["to_str"](sym_item)
-        #
-        str_builder = make_form_with_metadata_str_builder(build_sym_str)
-        #
-        n = draw(integers(min_value=1, max_value=metadata_max))
-        #
-        md_items = \
-            draw(lists(elements=metadata_items(flavor=metadata),
-                       min_size=n, max_size=n))
-        #
-        return {"inputs": sym_str,
-                "label": label,
-                "to_str": str_builder,
-                "verify": verify_with_metadata,
-                "metadata": md_items}
+        return draw(symbol_with_metadata_items(metadata=metadata))

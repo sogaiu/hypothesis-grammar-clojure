@@ -25,15 +25,9 @@ def build_anon_func_str(anon_func_item):
     return marker + open_delim + "".join(anon_func_elts) + close_delim
 
 @composite
-def anon_func_items(draw,
-                    elements=form_items(),
-                    separators=separator_strings(),
-                    metadata=False):
-    # avoid circular dependency
-    from .metadata import metadata_items, check_metadata_flavor
-    #
-    check_metadata_flavor(metadata)
-    #
+def bare_anon_func_items(draw,
+                         elements=form_items(),
+                         separators=separator_strings()):
     n = draw(integers(min_value=0, max_value=coll_max))
     #
     items = draw(lists(elements=elements,
@@ -44,29 +38,50 @@ def anon_func_items(draw,
     if n > 0:
         sep_strs = sep_strs[:-1] + [""]
     #
+    return {"inputs": items,
+            "label": label,
+            "to_str": build_anon_func_str,
+            "verify": verify,
+            "separators": sep_strs,
+            "marker": marker,
+            "open": open_delim,
+            "close": close_delim}
+
+@composite
+def anon_func_with_metadata_items(draw,
+                                  elements=form_items(),
+                                  separators=separator_strings(),
+                                  metadata="metadata"):
+    # avoid circular dependency
+    from .metadata import metadata_items, check_metadata_flavor
+    #
+    check_metadata_flavor(metadata)
+    #
+    af_item = draw(bare_anon_func_items(elements=elements,
+                                        separators=separators))
+    #
+    str_builder = make_form_with_metadata_str_builder(build_anon_func_str)
+    #
+    m = draw(integers(min_value=1, max_value=metadata_max))
+    #
+    md_items = draw(lists(elements=metadata_items(flavor=metadata),
+                          min_size=m, max_size=m))
+    #
+    af_item.update({"to_str": str_builder,
+                    "verify": verify_with_metadata,
+                    "metadata": md_items})
+    #
+    return af_item
+
+@composite
+def anon_func_items(draw,
+                    elements=form_items(),
+                    separators=separator_strings(),
+                    metadata=False):
     if not metadata:
-        return {"inputs": items,
-                "label": label,
-                "to_str": build_anon_func_str,
-                "verify": verify,
-                "separators": sep_strs,
-                "marker": marker,
-                "open": open_delim,
-                "close": close_delim}
+        return draw(bare_anon_func_items(elements=elements,
+                                         separators=separators))
     else:
-        str_builder = make_form_with_metadata_str_builder(build_anon_func_str)
-        #
-        m = draw(integers(min_value=1, max_value=metadata_max))
-        #
-        md_items = draw(lists(elements=metadata_items(flavor=metadata),
-                              min_size=m, max_size=m))
-        #
-        return {"inputs": items,
-                "label": label,
-                "to_str": str_builder,
-                "verify": verify_with_metadata,
-                "metadata": md_items,
-                "separators": sep_strs,
-                "marker": marker,
-                "open": open_delim,
-                "close": close_delim}
+        return draw(anon_func_with_metadata_items(elements=elements,
+                                                  separators=separators,
+                                                  metadata=metadata))
