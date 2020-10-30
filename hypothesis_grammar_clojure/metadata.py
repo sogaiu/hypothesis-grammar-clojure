@@ -92,9 +92,16 @@ def symbol_metadata_items(draw, label=md_label):
 
 @composite
 def metadata_items(draw, flavor="metadata"):
+    assert (flavor != None) and (flavor != False), \
+        f'flavor must not be {flavor}'
+    #
     if flavor == "any":
         label = draw(one_of(just(md_label),
                             just(old_md_label)))
+    elif flavor == "metadata":
+        label = md_label
+    elif flavor == "old_metadata":
+        label = old_md_label
     #
     assert label in [md_label, old_md_label], \
         f'unexpected label value: {label}'
