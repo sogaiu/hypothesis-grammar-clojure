@@ -55,42 +55,54 @@ def tag_items(draw):
     return tag_item
 
 @composite
-def tagged_literal_items(draw,
-                         separators=separator_strings(),
-                         metadata=False):
-    # avoid circular dependency
-    from .metadata import metadata_items, check_metadata_flavor
-    #
-    check_metadata_flavor(metadata)
-    #
+def bare_tagged_literal_items(draw,
+                              separators=separator_strings()):
     form_item = draw(form_items())
     #
     tag_item = draw(tag_items())
     #
     sep_strs = draw(lists(elements=separators,
                           min_size=2, max_size=2))
+    return {"inputs": form_item,
+            "label": label,
+            "to_str": build_tagged_literal_str,
+            "verify": verify,
+            "tag": tag_item,
+            "separators": sep_strs,
+            "marker": marker}
+
+@composite
+def tagged_literal_with_metadata_items(draw,
+                                       separators=separator_strings(),
+                                       metadata="metadata"):
+    # avoid circular dependency
+    from .metadata import metadata_items, check_metadata_flavor
+    #
+    check_metadata_flavor(metadata)
+    #
+    tl_item = draw(bare_tagged_literal_items(separators=separators))
+    #
+    str_builder = \
+        make_form_with_metadata_str_builder(build_tagged_literal_str)
+    #
+    n = draw(integers(min_value=1, max_value=metadata_max))
+    #
+    md_items = draw(lists(elements=metadata_items(flavor=metadata),
+                          min_size=n, max_size=n))
+    #
+    tl_item.update({"to_str": str_builder,
+                    "verify": verify_with_metadata,
+                    "metadata": md_items})
+    #
+    return tl_item
+
+@composite
+def tagged_literal_items(draw,
+                         separators=separator_strings(),
+                         metadata=False):
     if not metadata:
-        return {"inputs": form_item,
-                "label": label,
-                "to_str": build_tagged_literal_str,
-                "verify": verify,
-                "tag": tag_item,
-                "separators": sep_strs,
-                "marker": marker}
+        return draw(bare_tagged_literal_items(separators=separators))
     else:
-        str_builder = \
-            make_form_with_metadata_str_builder(build_tagged_literal_str)
-        #
-        n = draw(integers(min_value=1, max_value=metadata_max))
-        #
-        md_items = draw(lists(elements=metadata_items(flavor=metadata),
-                              min_size=n, max_size=n))
-        #
-        return {"inputs": form_item,
-                "label": label,
-                "to_str": str_builder,
-                "verify": verify_with_metadata,
-                "tag": tag_item,
-                "metadata": md_items,
-                "separators": sep_strs,
-                "marker": marker}
+        return \
+            draw(tagged_literal_with_metadata_items(separators=separators,
+                                                    metadata=metadata))

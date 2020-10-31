@@ -24,32 +24,47 @@ def build_unquote_form_str(item):
     return marker + sep + form_str
 
 @composite
-def unquote_form_items(draw, metadata=False):
+def bare_unquote_form_items(draw,
+                            forms=form_items()):
+    form_item = draw(forms)
+    #
+    return {"inputs": form_item,
+            "label": label,
+            "to_str": build_unquote_form_str,
+            "verify": verify,
+            "marker": marker}
+
+@composite
+def unquote_form_with_metadata_items(draw,
+                                     forms=form_items(),
+                                     metadata="metadata"):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
     check_metadata_flavor(metadata)
     #
-    form_item = draw(form_items())
+    uq_form = draw(bare_unquote_form_items(forms=forms))
     #
+    str_builder = \
+        make_form_with_metadata_str_builder(build_unquote_form_str)
+    #
+    n = draw(integers(min_value=1, max_value=metadata_max))
+    #
+    md_items = draw(lists(elements=metadata_items(flavor=metadata),
+                          min_size=n, max_size=n))
+    #
+    uq_form.update({"to_str": str_builder,
+                    "verify": verify_with_metadata,
+                    "metadata": md_items})
+    #
+    return uq_form
+
+@composite
+def unquote_form_items(draw,
+                       forms=form_items(),
+                       metadata=False):
     if not metadata:
-        return {"inputs": form_item,
-                "label": label,
-                "to_str": build_unquote_form_str,
-                "verify": verify,
-                "marker": marker}
+        return draw(bare_unquote_form_items(forms=forms))
     else:
-        str_builder = \
-            make_form_with_metadata_str_builder(build_unquote_form_str)
-        #
-        n = draw(integers(min_value=1, max_value=metadata_max))
-        #
-        md_items = draw(lists(elements=metadata_items(flavor=metadata),
-                              min_size=n, max_size=n))
-        #
-        return {"inputs": form_item,
-                "label": label,
-                "to_str": str_builder,
-                "verify": verify_with_metadata,
-                "metadata": md_items,
-                "marker": marker}
+        return draw(unquote_form_with_metadata_items(forms=forms,
+                                                     metadata=metadata))

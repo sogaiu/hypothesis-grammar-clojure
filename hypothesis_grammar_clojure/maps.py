@@ -24,14 +24,9 @@ def build_map_str(map_item):
     return open_delim + "".join(map_elts) + close_delim
 
 @composite
-def map_items(draw,
-              elements=form_items(),
-              separators=separator_strings(),
-              metadata=False):
-    # avoid circular dependency
-    from .metadata import metadata_items, check_metadata_flavor
-    #
-    check_metadata_flavor(metadata)
+def bare_map_items(draw,
+                   elements=form_items(),
+                   separators=separator_strings()):
     # XXX: what about this /2?
     n = 2 * draw(integers(min_value=0, max_value=coll_max/2))
     #
@@ -42,28 +37,49 @@ def map_items(draw,
     if n > 0:
         sep_strs = sep_strs[:-1] + [""]
     #
-    if not metadata:
-        return {"inputs": items,
-                "label": label,
-                "to_str": build_map_str,
-                "verify": verify,
-                "separators": sep_strs,
-                "open": open_delim,
-                "close": close_delim}
-    else:
-        str_builder = make_form_with_metadata_str_builder(build_map_str)
-        #
-        m = draw(integers(min_value=1, max_value=metadata_max))
-        #
-        md_items = draw(lists(elements=metadata_items(flavor=metadata),
-                              min_size=m, max_size=m))
-        #
-        return {"inputs": items,
-                "label": label,
-                "to_str": str_builder,
-                "verify": verify_with_metadata,
-                "metadata": md_items,
-                "separators": sep_strs,
-                "open": open_delim,
-                "close": close_delim}
+    return {"inputs": items,
+            "label": label,
+            "to_str": build_map_str,
+            "verify": verify,
+            "separators": sep_strs,
+            "open": open_delim,
+            "close": close_delim}
 
+@composite
+def map_with_metadata_items(draw,
+                            elements=form_items(),
+                            separators=separator_strings(),
+                            metadata="metadata"):
+    # avoid circular dependency
+    from .metadata import metadata_items, check_metadata_flavor
+    #
+    check_metadata_flavor(metadata)
+    #
+    map_item = draw(bare_map_items(elements=elements,
+                                   separators=separators))
+    #
+    str_builder = make_form_with_metadata_str_builder(build_map_str)
+    #
+    m = draw(integers(min_value=1, max_value=metadata_max))
+    #
+    md_items = draw(lists(elements=metadata_items(flavor=metadata),
+                          min_size=m, max_size=m))
+    #
+    map_item.update({"to_str": str_builder,
+                     "verify": verify_with_metadata,
+                     "metadata": md_items})
+    #
+    return map_item
+
+@composite
+def map_items(draw,
+              elements=form_items(),
+              separators=separator_strings(),
+              metadata=False):
+    if not metadata:
+        return draw(bare_map_items(elements=elements,
+                                   separators=separators))
+    else:
+        return draw(map_with_metadata_items(elements=elements,
+                                            separators=separators,
+                                            metadata=metadata))

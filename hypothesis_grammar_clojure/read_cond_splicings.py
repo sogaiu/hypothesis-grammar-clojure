@@ -30,15 +30,9 @@ def build_read_cond_splicing_str(read_cond_splicing_item):
         open_delim + "".join(read_cond_splicing_elts) + close_delim
 
 @composite
-def read_cond_splicing_items(draw,
-                             elements=form_items(),
-                             separators=separator_strings(),
-                             metadata=False):
-    # avoid circular dependency
-    from .metadata import metadata_items, check_metadata_flavor
-    #
-    check_metadata_flavor(metadata)
-    #
+def bare_read_cond_splicing_items(draw,
+                                  elements=form_items(),
+                                  separators=separator_strings()):
     n = draw(integers(min_value=0, max_value=floor(coll_max/2)))
     # XXX: may be auto-resolved are not allowed?
     kwd_items = draw(lists(elements=keyword_items(),
@@ -55,30 +49,53 @@ def read_cond_splicing_items(draw,
     items = [item
              for pair in zip(kwd_items, frm_items)
              for item in pair]
+    #
+    return {"inputs": items,
+            "label": label,
+            "to_str": build_read_cond_splicing_str,
+            "verify": verify,
+            "separators": sep_strs,
+            "marker": marker,
+            "open": open_delim,
+            "close": close_delim}
+
+@composite
+def read_cond_splicing_with_metadata_items(draw,
+                                           elements=form_items(),
+                                           separators=separator_strings(),
+                                           metadata="metadata"):
+    # avoid circular dependency
+    from .metadata import metadata_items, check_metadata_flavor
+    #
+    check_metadata_flavor(metadata)
+    #
+    rcs_item = draw(bare_read_cond_splicing_items(elements=elements,
+                                                  separators=separators))
+    #
+    str_builder = \
+        make_form_with_metadata_str_builder(build_read_cond_splicing_str)
+    #
+    m = draw(integers(min_value=1, max_value=metadata_max))
+    #
+    md_items = draw(lists(elements=metadata_items(flavor=metadata),
+                          min_size=m, max_size=m))
+    #
+    rcs_item.update({"to_str": str_builder,
+                     "verify": verify_with_metadata,
+                     "metadata": md_items})
+    #
+    return rcs_item
+
+@composite
+def read_cond_splicing_items(draw,
+                             elements=form_items(),
+                             separators=separator_strings(),
+                             metadata=False):
     if not metadata:
-        return {"inputs": items,
-                "label": label,
-                "to_str": build_read_cond_splicing_str,
-                "verify": verify,
-                "separators": sep_strs,
-                "marker": marker,
-                "open": open_delim,
-                "close": close_delim}
+        return draw(bare_read_cond_splicing_items(elements=elements,
+                                                  separators=separators))
     else:
-        str_builder = \
-            make_form_with_metadata_str_builder(build_read_cond_splicing_str)
-        #
-        m = draw(integers(min_value=1, max_value=metadata_max))
-        #
-        md_items = draw(lists(elements=metadata_items(flavor=metadata),
-                              min_size=m, max_size=m))
-        #
-        return {"inputs": items,
-                "label": label,
-                "to_str": str_builder,
-                "verify": verify_with_metadata,
-                "metadata": md_items,
-                "separators": sep_strs,
-                "marker": marker,
-                "open": open_delim,
-                "close": close_delim}
+        return \
+            draw(read_cond_splicing_with_metadata_items(elements=elements,
+                                                        separators=separators,
+                                                        metadata=metadata))

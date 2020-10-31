@@ -23,33 +23,52 @@ def build_eval_form_str(item):
     return marker + inputs["to_str"](inputs)
 
 @composite
-def eval_form_items(draw, metadata=False):
+def evalee_items(draw):
+    return draw(one_of(list_items(elements=form_items()),
+                       read_cond_items(),
+                       symbol_items()))
+
+@composite
+def bare_eval_form_items(draw, forms=evalee_items()):
+    evalee_item = draw(forms)
+    #
+    return {"inputs": evalee_item,
+            "label": label,
+            "to_str": build_eval_form_str,
+            "verify": verify,
+            "marker": marker}
+
+@composite
+def eval_form_with_metadata_items(draw,
+                                  forms=evalee_items(),
+                                  metadata="metadata"):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
     check_metadata_flavor(metadata)
     #
-    legal_item = draw(one_of(list_items(elements=form_items()),
-                             read_cond_items(),
-                             symbol_items()))
+    evl_form = draw(bare_eval_form_items(forms=forms))
+    #
+    str_builder = \
+        make_form_with_metadata_str_builder(build_eval_form_str)
+    #
+    n = draw(integers(min_value=1, max_value=metadata_max))
+    #
+    md_items = draw(lists(elements=metadata_items(flavor=metadata),
+                          min_size=n, max_size=n))
+    #
+    evl_form.update({"to_str": str_builder,
+                     "verify": verify_with_metadata,
+                     "metadata": md_items})
+    #
+    return evl_form
+
+@composite
+def eval_form_items(draw,
+                    forms=evalee_items(),
+                    metadata=False):
     if not metadata:
-        return {"inputs": legal_item,
-                "label": label,
-                "to_str": build_eval_form_str,
-                "verify": verify,
-                "marker": marker}
+        return draw(bare_eval_form_items(forms=forms))
     else:
-        str_builder = \
-            make_form_with_metadata_str_builder(build_eval_form_str)
-        #
-        n = draw(integers(min_value=1, max_value=metadata_max))
-        #
-        md_items = draw(lists(elements=metadata_items(flavor=metadata),
-                              min_size=n, max_size=n))
-        #
-        return {"inputs": legal_item,
-                "label": label,
-                "to_str": str_builder,
-                "verify": verify_with_metadata,
-                "metadata": md_items,
-                "marker": marker}
+        return draw(eval_form_with_metadata_items(forms=forms,
+                                                  metadata=metadata))

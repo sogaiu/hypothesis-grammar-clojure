@@ -25,15 +25,9 @@ def build_set_str(set_item):
     return marker + open_delim + "".join(set_elts) + close_delim
 
 @composite
-def set_items(draw,
-              elements=form_items(),
-              separators=separator_strings(),
-              metadata=False):
-    # avoid circular dependency
-    from .metadata import metadata_items, check_metadata_flavor
-    #
-    check_metadata_flavor(metadata)
-    #
+def bare_set_items(draw,
+                   elements=form_items(),
+                   separators=separator_strings()):
     n = draw(integers(min_value=0, max_value=coll_max))
     #
     items = draw(lists(elements=elements, min_size=n, max_size=n))
@@ -43,29 +37,50 @@ def set_items(draw,
     if n > 0:
         sep_strs = sep_strs[:-1] + [""]
     #
+    return {"inputs": items,
+            "label": label,
+            "to_str": build_set_str,
+            "verify": verify,
+            "separators": sep_strs,
+            "marker": marker,
+            "open": open_delim,
+            "close": close_delim}
+
+@composite
+def set_with_metadata_items(draw,
+                            elements=form_items(),
+                            separators=separator_strings(),
+                            metadata="metadata"):
+    # avoid circular dependency
+    from .metadata import metadata_items, check_metadata_flavor
+    #
+    check_metadata_flavor(metadata)
+    #
+    set_item = draw(bare_set_items(elements=elements,
+                                   separators=separators))
+    #
+    str_builder = make_form_with_metadata_str_builder(build_set_str)
+    #
+    m = draw(integers(min_value=1, max_value=metadata_max))
+    #
+    md_items = draw(lists(elements=metadata_items(flavor=metadata),
+                          min_size=m, max_size=m))
+    #
+    set_item.update({"to_str": str_builder,
+                     "verify": verify_with_metadata,
+                     "metadata": md_items})
+    #
+    return set_item
+
+@composite
+def set_items(draw,
+              elements=form_items(),
+              separators=separator_strings(),
+              metadata=False):
     if not metadata:
-        return {"inputs": items,
-                "label": label,
-                "to_str": build_set_str,
-                "verify": verify,
-                "separators": sep_strs,
-                "marker": marker,
-                "open": open_delim,
-                "close": close_delim}
+        return draw(bare_set_items(elements=elements,
+                                   separators=separators))
     else:
-        str_builder = make_form_with_metadata_str_builder(build_set_str)
-        #
-        m = draw(integers(min_value=1, max_value=metadata_max))
-        #
-        md_items = draw(lists(elements=metadata_items(flavor=metadata),
-                              min_size=m, max_size=m))
-        #
-        return {"inputs": items,
-                "label": label,
-                "to_str": str_builder,
-                "verify": verify_with_metadata,
-                "metadata": md_items,
-                "separators": sep_strs,
-                "marker": marker,
-                "open": open_delim,
-                "close": close_delim}
+        return draw(set_with_metadata_items(elements=elements,
+                                            separators=separators,
+                                            metadata=metadata))
