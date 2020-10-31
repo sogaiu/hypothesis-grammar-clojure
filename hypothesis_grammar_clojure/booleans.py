@@ -7,7 +7,10 @@ def build_boolean_str(item):
     return item["inputs"]
 
 @composite
-def boolean_items(draw):
+def boolean_items(draw,
+                  label=label,
+                  verify=verify):
+    #
     bool_str = draw(one_of(just("false"), just("true")))
     #
     return {"inputs": bool_str,

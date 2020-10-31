@@ -8,7 +8,10 @@ def build_string_str(item):
     return item["inputs"]
 
 @composite
-def string_items(draw):
+def string_items(draw,
+                 label=label,
+                 verify=verify):
+    #
     n = draw(integers(min_value=0, max_value=100))
     #
     not_tween_delims = ['"', '\\']

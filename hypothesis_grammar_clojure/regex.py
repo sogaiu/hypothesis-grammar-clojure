@@ -12,7 +12,10 @@ def build_regex_str(item):
     return marker + str_item["to_str"](str_item)
 
 @composite
-def regex_items(draw):
+def regex_items(draw,
+                label=label,
+                verify=verify):
+    #
     str_item = draw(string_items())
     #
     return {"inputs": str_item,

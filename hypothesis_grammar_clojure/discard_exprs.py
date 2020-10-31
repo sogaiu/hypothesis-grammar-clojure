@@ -15,7 +15,11 @@ def build_discard_expr_str(item):
 
 # XXX: make another key-value pair for the repeat non_form?
 @composite
-def discard_expr_items(draw, elements=form_items()):
+def discard_expr_items(draw,
+                       elements=form_items(),
+                       label=label,
+                       verify=verify):
+    #
     some_item = draw(elements)
     #
     return {"inputs": some_item,

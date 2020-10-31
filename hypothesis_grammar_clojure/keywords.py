@@ -60,7 +60,10 @@ def unqualified_keyword_no_sigil_as_str(draw):
     return f'{head_char}{kwd_body}'
 
 @composite
-def unqualified_auto_resolved_keyword_items(draw):
+def unqualified_auto_resolved_keyword_items(draw,
+                                            label=label,
+                                            verify=verify):
+    #
     uq_kwd_no_sig = draw(unqualified_keyword_no_sigil_as_str())
     # clojure repl rejects ::/
     assume(uq_kwd_no_sig != "/")
@@ -73,7 +76,10 @@ def unqualified_auto_resolved_keyword_items(draw):
             "verify": verify}
 
 @composite
-def unqualified_keyword_items(draw):
+def unqualified_keyword_items(draw,
+                              label=label,
+                              verify=verify):
+    #
     uq_kwd_no_sig = draw(unqualified_keyword_no_sigil_as_str())
     #
     kwd_str = f':{uq_kwd_no_sig}'
@@ -125,7 +131,9 @@ def keyword_ns_as_str(draw):
     return f'{head_char}{kwd_body}'
 
 @composite
-def qualified_auto_resolved_keyword_items(draw):
+def qualified_auto_resolved_keyword_items(draw,
+                                          label=label,
+                                          verify=verify):
     kwd_ns = draw(keyword_ns_as_str())
     uq_kwd_no_sig = draw(unqualified_keyword_no_sigil_as_str())
     #
@@ -137,7 +145,10 @@ def qualified_auto_resolved_keyword_items(draw):
             "verify": verify}
 
 @composite
-def qualified_keyword_items(draw):
+def qualified_keyword_items(draw,
+                            label=label,
+                            verify=verify):
+    #
     kwd_ns = draw(keyword_ns_as_str())
     uq_kwd_no_sig = draw(unqualified_keyword_no_sigil_as_str())
     #
@@ -149,9 +160,16 @@ def qualified_keyword_items(draw):
             "verify": verify}
 
 @composite
-def keyword_items(draw):
-    kwd_item = draw(one_of(unqualified_auto_resolved_keyword_items(),
-                           unqualified_keyword_items(),
-                           qualified_auto_resolved_keyword_items(),
-                           qualified_keyword_items()))
+def keyword_items(draw,
+                  label=label,
+                  verify=verify):
+    kwd_item = \
+        draw(one_of(unqualified_auto_resolved_keyword_items(label=label,
+                                                            verify=verify),
+                    unqualified_keyword_items(label=label,
+                                              verify=verify),
+                    qualified_auto_resolved_keyword_items(label=label,
+                                                          verify=verify),
+                    qualified_keyword_items(label=label,
+                                            verify=verify)))
     return kwd_item

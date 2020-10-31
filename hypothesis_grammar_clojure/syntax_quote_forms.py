@@ -20,7 +20,9 @@ def build_syntax_quote_form_str(item):
 
 @composite
 def bare_syntax_quote_form_items(draw,
-                                 forms=form_items()):
+                                 forms=form_items(),
+                                 label=label,
+                                 verify=verify):
     form_item = draw(forms)
     #
     return {"inputs": form_item,
@@ -32,11 +34,17 @@ def bare_syntax_quote_form_items(draw,
 @composite
 def syntax_quote_form_with_metadata_items(draw,
                                           forms=form_items(),
-                                          metadata="metadata"):
+                                          metadata="metadata",
+                                          label=label,
+                                          verify=verify_with_metadata):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
     check_metadata_flavor(metadata)
+    #
+    sq_form = draw(bare_syntax_quote_form_items(forms,
+                                                label=label,
+                                                verify=verify))
     #
     str_builder = \
         make_form_with_metadata_str_builder(build_syntax_quote_form_str)
@@ -46,10 +54,7 @@ def syntax_quote_form_with_metadata_items(draw,
     md_items = draw(lists(elements=metadata_items(flavor=metadata),
                           min_size=n, max_size=n))
     #
-    sq_form = draw(bare_syntax_quote_form_items(forms))
-    #
     sq_form.update({"to_str": str_builder,
-                    "verify": verify_with_metadata,
                     "metadata": md_items})
     #
     return sq_form
@@ -57,9 +62,16 @@ def syntax_quote_form_with_metadata_items(draw,
 @composite
 def syntax_quote_form_items(draw,
                             forms=form_items(),
-                            metadata=False):
+                            metadata=False,
+                            label=label,
+                            verify=verify):
+    #
     if not metadata:
-        return draw(bare_syntax_quote_form_items(forms=forms))
+        return draw(bare_syntax_quote_form_items(forms=forms,
+                                                 label=label,
+                                                 verify=verify))
     else:
         return draw(syntax_quote_form_with_metadata_items(forms=forms,
-                                                          metadata=metadata))
+                                                          metadata=metadata,
+                                                          label=label,
+                                                          verify=verify))

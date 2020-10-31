@@ -7,7 +7,10 @@ def build_nil_str(item):
     return item["inputs"]
 
 @composite
-def nil_items(draw):
+def nil_items(draw,
+              label=label,
+              verify=verify):
+    #
     nil_str = draw(just("nil"))
     #
     return {"inputs": nil_str,

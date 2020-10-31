@@ -13,7 +13,10 @@ def build_symbolic_value_str(item):
     return marker + sym_item["to_str"](sym_item)
 
 @composite
-def symbolic_value_items(draw):
+def symbolic_value_items(draw,
+                         label=label,
+                         verify=verify):
+    #
     sym_val_str = draw(one_of(just("Inf"), just("-Inf"), just("NaN")))
     #
     # XXX: a bit of a hack?

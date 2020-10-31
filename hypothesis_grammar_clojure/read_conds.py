@@ -31,7 +31,10 @@ def build_read_cond_str(read_cond_item):
 @composite
 def bare_read_cond_items(draw,
                          elements=form_items(),
-                         separators=separator_strings()):
+                         separators=separator_strings(),
+                         label=label,
+                         verify=verify):
+    #
     n = draw(integers(min_value=0, max_value=floor(coll_max/2)))
     # XXX: may be auto-resolved are not allowed?
     kwd_items = draw(lists(elements=keyword_items(),
@@ -62,14 +65,18 @@ def bare_read_cond_items(draw,
 def read_cond_with_metadata_items(draw,
                                   elements=form_items(),
                                   separators=separator_strings(),
-                                  metadata="metadata"):
+                                  metadata="metadata",
+                                  label=label,
+                                  verify=verify_with_metadata):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
     check_metadata_flavor(metadata)
     #
     rc_item = draw(bare_read_cond_items(elements=elements,
-                                        separators=separators))
+                                        separators=separators,
+                                        label=label,
+                                        verify=verify))
     #
     str_builder = \
         make_form_with_metadata_str_builder(build_read_cond_str)
@@ -80,7 +87,6 @@ def read_cond_with_metadata_items(draw,
                           min_size=m, max_size=m))
     #
     rc_item.update({"to_str": str_builder,
-                    "verify": verify_with_metadata,
                     "metadata": md_items})
     #
     return rc_item
@@ -89,11 +95,17 @@ def read_cond_with_metadata_items(draw,
 def read_cond_items(draw,
                     elements=form_items(),
                     separators=separator_strings(),
-                    metadata=False):
+                    metadata=False,
+                    label=label,
+                    verify=verify):
     if not metadata:
         return draw(bare_read_cond_items(elements=elements,
-                                         separators=separators))
+                                         separators=separators,
+                                         label=label,
+                                         verify=verify))
     else:
         return draw(read_cond_with_metadata_items(elements=elements,
                                                   separators=separators,
-                                                  metadata=metadata))
+                                                  metadata=metadata,
+                                                  label=label,
+                                                  verify=verify))

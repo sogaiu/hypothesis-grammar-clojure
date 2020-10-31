@@ -26,7 +26,10 @@ def build_vector_str(vector_item):
 @composite
 def bare_vector_items(draw,
                       elements=form_items(),
-                      separators=separator_strings()):
+                      separators=separator_strings(),
+                      label=label,
+                      verify=verify):
+    #
     n = draw(integers(min_value=0, max_value=coll_max))
     #
     items = draw(lists(elements=elements, min_size=n, max_size=n))
@@ -48,14 +51,18 @@ def bare_vector_items(draw,
 def vector_with_metadata_items(draw,
                                elements=form_items(),
                                separators=separator_strings(),
-                               metadata="metadata"):
+                               metadata="metadata",
+                               label=label,
+                               verify=verify_with_metadata):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
     check_metadata_flavor(metadata)
     #
     vec_item = draw(bare_vector_items(elements=elements,
-                                      separators=separators))
+                                      separators=separators,
+                                      label=label,
+                                      verify=verify))
     #
     str_builder = make_form_with_metadata_str_builder(build_vector_str)
     #
@@ -65,7 +72,6 @@ def vector_with_metadata_items(draw,
                           min_size=m, max_size=m))
     #
     vec_item.update({"to_str": str_builder,
-                     "verify": verify_with_metadata,
                      "metadata": md_items})
     #
     return vec_item
@@ -74,11 +80,18 @@ def vector_with_metadata_items(draw,
 def vector_items(draw,
                  elements=form_items(),
                  separators=separator_strings(),
-                 metadata=False):
+                 metadata=False,
+                 label=label,
+                 verify=verify):
+    #
     if not metadata:
         return draw(bare_vector_items(elements=elements,
-                                      separators=separators))
+                                      separators=separators,
+                                      label=label,
+                                      verify=verify))
     else:
         return draw(vector_with_metadata_items(elements=elements,
                                                separators=separators,
-                                               metadata=metadata))
+                                               metadata=metadata,
+                                               label=label,
+                                               verify=verify))

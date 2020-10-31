@@ -27,7 +27,10 @@ def build_anon_func_str(anon_func_item):
 @composite
 def bare_anon_func_items(draw,
                          elements=form_items(),
-                         separators=separator_strings()):
+                         separators=separator_strings(),
+                         label=label,
+                         verify=verify):
+    #
     n = draw(integers(min_value=0, max_value=coll_max))
     #
     items = draw(lists(elements=elements,
@@ -51,14 +54,18 @@ def bare_anon_func_items(draw,
 def anon_func_with_metadata_items(draw,
                                   elements=form_items(),
                                   separators=separator_strings(),
-                                  metadata="metadata"):
+                                  metadata="metadata",
+                                  label=label,
+                                  verify=verify_with_metadata):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
     check_metadata_flavor(metadata)
     #
     af_item = draw(bare_anon_func_items(elements=elements,
-                                        separators=separators))
+                                        separators=separators,
+                                        label=label,
+                                        verify=verify))
     #
     str_builder = make_form_with_metadata_str_builder(build_anon_func_str)
     #
@@ -68,7 +75,6 @@ def anon_func_with_metadata_items(draw,
                           min_size=m, max_size=m))
     #
     af_item.update({"to_str": str_builder,
-                    "verify": verify_with_metadata,
                     "metadata": md_items})
     #
     return af_item
@@ -77,11 +83,17 @@ def anon_func_with_metadata_items(draw,
 def anon_func_items(draw,
                     elements=form_items(),
                     separators=separator_strings(),
-                    metadata=False):
+                    metadata=False,
+                    label=label,
+                    verify=verify):
     if not metadata:
         return draw(bare_anon_func_items(elements=elements,
-                                         separators=separators))
+                                         separators=separators,
+                                         label=label,
+                                         verify=verify))
     else:
         return draw(anon_func_with_metadata_items(elements=elements,
                                                   separators=separators,
-                                                  metadata=metadata))
+                                                  metadata=metadata,
+                                                  label=label,
+                                                  verify=verify))

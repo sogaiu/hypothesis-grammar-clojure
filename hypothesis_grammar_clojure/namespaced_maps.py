@@ -42,7 +42,9 @@ def prefix_items(draw):
 @composite
 def bare_namespaced_map_items(draw,
                               elements=form_items(),
-                              separators=separator_strings()):
+                              separators=separator_strings(),
+                              label=label,
+                              verify=verify):
     # XXX: what about this /2?
     n = 2 * draw(integers(min_value=0, max_value=coll_max/2))
     #
@@ -69,14 +71,18 @@ def bare_namespaced_map_items(draw,
 def namespaced_map_with_metadata_items(draw,
                                        elements=form_items(),
                                        separators=separator_strings(),
-                                       metadata="metadata"):
+                                       metadata="metadata",
+                                       label=label,
+                                       verify=verify_with_metadata):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
     check_metadata_flavor(metadata)
     #
     ns_map_item = draw(bare_namespaced_map_items(elements=elements,
-                                                 separators=separators))
+                                                 separators=separators,
+                                                 label=label,
+                                                 verify=verify))
     #
     str_builder = \
         make_form_with_metadata_str_builder(build_namespaced_map_str)
@@ -87,7 +93,6 @@ def namespaced_map_with_metadata_items(draw,
                           min_size=m, max_size=m))
     #
     ns_map_item.update({"to_str": str_builder,
-                        "verify": verify_with_metadata,
                         "metadata": md_items})
     return ns_map_item
 
@@ -95,11 +100,17 @@ def namespaced_map_with_metadata_items(draw,
 def namespaced_map_items(draw,
                          elements=form_items(),
                          separators=separator_strings(),
-                         metadata=False):
+                         metadata=False,
+                         label=label,
+                         verify=verify):
     if not metadata:
         return draw(bare_namespaced_map_items(elements=elements,
-                                              separators=separators))
+                                              separators=separators,
+                                              label=label,
+                                              verify=verify))
     else:
         return draw(namespaced_map_with_metadata_items(elements=elements,
                                                        separators=separators,
-                                                       metadata=metadata))
+                                                       metadata=metadata,
+                                                       label=label,
+                                                       verify=verify))

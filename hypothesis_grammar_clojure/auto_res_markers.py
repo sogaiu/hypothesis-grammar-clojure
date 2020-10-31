@@ -8,7 +8,10 @@ def build_auto_res_marker_str(item):
     return item["inputs"]
 
 @composite
-def auto_res_marker_items(draw):
+def auto_res_marker_items(draw,
+                          label=label,
+                          verify=verify):
+    #
     arm_item = draw(just("::"))
     #
     return {"inputs": arm_item,

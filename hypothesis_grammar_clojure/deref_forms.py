@@ -19,7 +19,11 @@ def build_deref_form_str(item):
     return marker + inputs["to_str"](inputs)
 
 @composite
-def bare_deref_form_items(draw, forms=form_items()):
+def bare_deref_form_items(draw,
+                          forms=form_items(),
+                          label=label,
+                          verify=verify):
+    #
     form_item = draw(forms)
     #
     return {"inputs": form_item,
@@ -31,11 +35,17 @@ def bare_deref_form_items(draw, forms=form_items()):
 @composite
 def deref_form_with_metadata_items(draw,
                                    forms=form_items(),
-                                   metadata="metadata"):
+                                   metadata="metadata",
+                                   label=label,
+                                   verify=verify_with_metadata):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
     check_metadata_flavor(metadata)
+    #
+    d_form = draw(bare_deref_form_items(forms=forms,
+                                        label=label,
+                                        verify=verify))
     #
     str_builder = \
         make_form_with_metadata_str_builder(build_deref_form_str)
@@ -45,10 +55,7 @@ def deref_form_with_metadata_items(draw,
     md_items = draw(lists(elements=metadata_items(flavor=metadata),
                           min_size=n, max_size=n))
     #
-    d_form = draw(bare_deref_form_items(forms=forms))
-    #
     d_form.update({"to_str": str_builder,
-                   "verify": verify_with_metadata,
                    "metadata": md_items})
     #
     return d_form
@@ -56,9 +63,15 @@ def deref_form_with_metadata_items(draw,
 @composite
 def deref_form_items(draw,
                      forms=form_items(),
-                     metadata=False):
+                     metadata=False,
+                     label=label,
+                     verify=verify):
     if not metadata:
-        return draw(bare_deref_form_items(forms=forms))
+        return draw(bare_deref_form_items(forms=forms,
+                                          label=label,
+                                          verify=verify))
     else:
         return draw(deref_form_with_metadata_items(forms=forms,
-                                                   metadata=metadata))
+                                                   metadata=metadata,
+                                                   label=label,
+                                                   verify=verify))

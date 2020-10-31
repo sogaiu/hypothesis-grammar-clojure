@@ -56,7 +56,10 @@ def tag_items(draw):
 
 @composite
 def bare_tagged_literal_items(draw,
-                              separators=separator_strings()):
+                              separators=separator_strings(),
+                              label=label,
+                              verify=verify):
+    #
     form_item = draw(form_items())
     #
     tag_item = draw(tag_items())
@@ -74,13 +77,17 @@ def bare_tagged_literal_items(draw,
 @composite
 def tagged_literal_with_metadata_items(draw,
                                        separators=separator_strings(),
-                                       metadata="metadata"):
+                                       metadata="metadata",
+                                       label=label,
+                                       verify=verify_with_metadata):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
     check_metadata_flavor(metadata)
     #
-    tl_item = draw(bare_tagged_literal_items(separators=separators))
+    tl_item = draw(bare_tagged_literal_items(separators=separators,
+                                             label=label,
+                                             verify=verify))
     #
     str_builder = \
         make_form_with_metadata_str_builder(build_tagged_literal_str)
@@ -91,7 +98,6 @@ def tagged_literal_with_metadata_items(draw,
                           min_size=n, max_size=n))
     #
     tl_item.update({"to_str": str_builder,
-                    "verify": verify_with_metadata,
                     "metadata": md_items})
     #
     return tl_item
@@ -99,10 +105,16 @@ def tagged_literal_with_metadata_items(draw,
 @composite
 def tagged_literal_items(draw,
                          separators=separator_strings(),
-                         metadata=False):
+                         metadata=False,
+                         label=label,
+                         verify=verify):
     if not metadata:
-        return draw(bare_tagged_literal_items(separators=separators))
+        return draw(bare_tagged_literal_items(separators=separators,
+                                              label=label,
+                                              verify=verify))
     else:
         return \
             draw(tagged_literal_with_metadata_items(separators=separators,
-                                                    metadata=metadata))
+                                                    metadata=metadata,
+                                                    label=label,
+                                                    verify=verify))

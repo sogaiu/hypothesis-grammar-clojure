@@ -11,7 +11,9 @@ def build_chr_str(item):
     return item["inputs"]
 
 @composite
-def any_character_items(draw):
+def any_character_items(draw,
+                        label=label,
+                        verify=verify):
     # XXX: will include surrogates which seem to lead to problems
     #      but unclear whether that's in tree-sitter or python...
     #character = draw(characters())
@@ -27,7 +29,10 @@ def any_character_items(draw):
             "verify": verify}
 
 @composite
-def named_character_items(draw):
+def named_character_items(draw,
+                          label=label,
+                          verify=verify):
+    #
     named_char = draw(one_of(just("backspace"),
                              just("formfeed"),
                              just("newline"),
@@ -43,7 +48,10 @@ def named_character_items(draw):
             "verify": verify}
 
 @composite
-def octal_character_items(draw):
+def octal_character_items(draw,
+                          label=label,
+                          verify=verify):
+    #
     n = draw(integers(min_value=1, max_value=3))
     #
     if n == 3:
@@ -65,7 +73,10 @@ def octal_character_items(draw):
             "verify": verify}
 
 @composite
-def unicode_quad_character_items(draw):
+def unicode_quad_character_items(draw,
+                                 label=label,
+                                 verify=verify):
+    #
     pre_digits = draw(lists(elements=integers(min_value=0,
                                               max_value=15),
                             min_size=4, max_size=4))
@@ -81,9 +92,16 @@ def unicode_quad_character_items(draw):
             "verify": verify}
 
 @composite
-def character_items(draw):
-    chr_item = draw(one_of(any_character_items(),
-                           named_character_items(),
-                           octal_character_items(),
-                           unicode_quad_character_items()))
+def character_items(draw,
+                    label=label,
+                    verify=verify):
+    #
+    chr_item = draw(one_of(any_character_items(label=label,
+                                               verify=verify),
+                           named_character_items(label=label,
+                                                 verify=verify),
+                           octal_character_items(label=label,
+                                                 verify=verify),
+                           unicode_quad_character_items(label=label,
+                                                        verify=verify)))
     return chr_item

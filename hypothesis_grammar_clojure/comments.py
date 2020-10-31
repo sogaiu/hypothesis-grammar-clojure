@@ -9,7 +9,11 @@ def build_comment_str(item):
 
 # XXX: #! type of comment is not implemented yet
 @composite
-def comment_items(draw, trailing_newline=True):
+def comment_items(draw,
+                  trailing_newline=True,
+                  label=label,
+                  verify=verify):
+    #
     n = draw(integers(min_value=0, max_value=100))
     #
     skip_chars = ["\n", "\r"] # XXX: possibly \r is ok

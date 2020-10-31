@@ -19,7 +19,11 @@ def build_quote_form_str(item):
     return marker + inputs["to_str"](inputs)
 
 @composite
-def bare_quote_form_items(draw, forms=form_items()):
+def bare_quote_form_items(draw,
+                          forms=form_items(),
+                          label=label,
+                          verify=verify):
+    #
     form_item = draw(forms)
     #
     return {"inputs": form_item,
@@ -31,13 +35,17 @@ def bare_quote_form_items(draw, forms=form_items()):
 @composite
 def quote_form_with_metadata_items(draw,
                                    forms=form_items(),
-                                   metadata="metadata"):
+                                   metadata="metadata",
+                                   label=label,
+                                   verify=verify_with_metadata):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
     check_metadata_flavor(metadata)
     #
-    q_form = draw(bare_quote_form_items(forms=forms))
+    q_form = draw(bare_quote_form_items(forms=forms,
+                                        label=label,
+                                        verify=verify))
     #
     str_builder = \
         make_form_with_metadata_str_builder(build_quote_form_str)
@@ -48,7 +56,6 @@ def quote_form_with_metadata_items(draw,
                           min_size=n, max_size=n))
     #
     q_form.update({"to_str": str_builder,
-                   "verify": verify_with_metadata,
                    "metadata": md_items})
     #
     return q_form
@@ -56,9 +63,15 @@ def quote_form_with_metadata_items(draw,
 @composite
 def quote_form_items(draw,
                      forms=form_items(),
-                     metadata=False):
+                     metadata=False,
+                     label=label,
+                     verify=verify):
     if not metadata:
-        return draw(bare_quote_form_items(forms=forms))
+        return draw(bare_quote_form_items(forms=forms,
+                                          label=label,
+                                          verify=verify))
     else:
         return draw(quote_form_with_metadata_items(forms=forms,
-                                                   metadata=metadata))
+                                                   metadata=metadata,
+                                                   label=label,
+                                                   verify=verify))

@@ -40,58 +40,77 @@ def attach_metadata(metadata_strs, metadatee_str):
 
 # XXX: only non-auto-resolved-keywords are valid
 @composite
-def keyword_metadata_items(draw, label=md_label):
+def keyword_metadata_items(draw,
+                           label=md_label,
+                           verify=verify_atom):
+    #
     keyword_item = draw(one_of(unqualified_keyword_items(),
                                qualified_keyword_items()))
     #
     return {"inputs": keyword_item,
             "label": label,
             "to_str": build_metadata_str,
-            "verify": verify_atom,
+            "verify": verify,
             "marker": marker_for_label[label]}
 
 @composite
-def map_metadata_items(draw, label=md_label):
+def map_metadata_items(draw,
+                       label=md_label,
+                       verify=verify_coll):
+    #
     map_item = draw(map_items())
     #
     return {"inputs": map_item,
             "label": label,
             "to_str": build_metadata_str,
-            "verify": verify_coll,
+            "verify": verify,
             "marker": marker_for_label[label]}
 
 @composite
-def read_cond_metadata_items(draw, label=md_label):
+def read_cond_metadata_items(draw,
+                             label=md_label,
+                             verify=verify_coll):
+    #
     read_cond_item = draw(read_cond_items())
     #
     return {"inputs": read_cond_item,
             "label": label,
             "to_str": build_metadata_str,
-            "verify": verify_coll,
+            "verify": verify,
             "marker": marker_for_label[label]}
 
 @composite
-def string_metadata_items(draw, label=md_label):
+def string_metadata_items(draw,
+                          label=md_label,
+                          verify=verify_atom):
+    #
     string_item = draw(string_items())
     #
     return {"inputs": string_item,
             "label": label,
             "to_str": build_metadata_str,
-            "verify": verify_atom,
+            "verify": verify,
             "marker": marker_for_label[label]}
 
 @composite
-def symbol_metadata_items(draw, label=md_label):
+def symbol_metadata_items(draw,
+                          label=md_label,
+                          verify=verify_atom):
+    #
     symbol_item = draw(symbol_items())
     #
     return {"inputs": symbol_item,
             "label": label,
             "to_str": build_metadata_str,
-            "verify": verify_atom,
+            "verify": verify,
             "marker": marker_for_label[label]}
 
 @composite
-def metadata_items(draw, flavor="metadata"):
+def metadata_items(draw,
+                   flavor="metadata",
+                   verify_atom=verify_atom,
+                   verify_coll=verify_coll):
+    #
     assert (flavor != None) and (flavor != False), \
         f'flavor must not be {flavor}'
     #
@@ -107,11 +126,16 @@ def metadata_items(draw, flavor="metadata"):
         f'unexpected label value: {label}'
     #
     metadata_item = \
-        draw(one_of(map_metadata_items(label=label),
-                    keyword_metadata_items(label=label),
-                    read_cond_metadata_items(label=label),
-                    string_metadata_items(label=label),
-                    symbol_metadata_items(label=label)))
+        draw(one_of(map_metadata_items(label=label,
+                                       verify=verify_coll),
+                    keyword_metadata_items(label=label,
+                                           verify=verify_atom),
+                    read_cond_metadata_items(label=label,
+                                             verify=verify_coll),
+                    string_metadata_items(label=label,
+                                          verify=verify_atom),
+                    symbol_metadata_items(label=label,
+                                          verify=verify_atom)))
     return metadata_item
 
 def check_metadata_flavor(metadata):

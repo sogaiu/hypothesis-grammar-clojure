@@ -20,7 +20,9 @@ def build_unquote_splicing_form_str(item):
 
 @composite
 def bare_unquote_splicing_form_items(draw,
-                                     forms=form_items()):
+                                     forms=form_items(),
+                                     label=label,
+                                     verify=verify):
     form_item = draw(forms)
     #
     return {"inputs": form_item,
@@ -32,13 +34,17 @@ def bare_unquote_splicing_form_items(draw,
 @composite
 def unquote_splicing_form_with_metadata_items(draw,
                                               forms=form_items(),
-                                              metadata="metadata"):
+                                              metadata="metadata",
+                                              label=label,
+                                              verify=verify_with_metadata):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
     check_metadata_flavor(metadata)
     #
-    uqs_form = draw(bare_unquote_splicing_form_items(forms=forms))
+    uqs_form = draw(bare_unquote_splicing_form_items(forms=forms,
+                                                     label=label,
+                                                     verify=verify))
     #
     str_builder = \
         make_form_with_metadata_str_builder(
@@ -50,7 +56,6 @@ def unquote_splicing_form_with_metadata_items(draw,
                           min_size=n, max_size=n))
     #
     uqs_form.update({"to_str": str_builder,
-                     "verify": verify_with_metadata,
                      "metadata": md_items})
     #
     return uqs_form
@@ -58,10 +63,16 @@ def unquote_splicing_form_with_metadata_items(draw,
 @composite
 def unquote_splicing_form_items(draw,
                                 forms=form_items(),
-                                metadata=False):
+                                metadata=False,
+                                label=label,
+                                verify=verify):
     if not metadata:
-        return draw(bare_unquote_splicing_form_items(forms=forms))
+        return draw(bare_unquote_splicing_form_items(forms=forms,
+                                                     label=label,
+                                                     verify=verify))
     else:
         return \
             draw(unquote_splicing_form_with_metadata_items(forms=forms,
-                                                           metadata=metadata))
+                                                           metadata=metadata,
+                                                           label=label,
+                                                           verify=verify))

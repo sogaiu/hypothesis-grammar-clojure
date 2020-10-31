@@ -69,7 +69,10 @@ def unqualified_symbol_as_str(draw):
     return f'{head_char}{sym_body}'
     
 @composite
-def unqualified_symbol_items(draw):
+def unqualified_symbol_items(draw,
+                             label=label,
+                             verify=verify):
+    #
     sym_str = draw(unqualified_symbol_as_str())
     #
     return {"inputs": sym_str,
@@ -78,7 +81,9 @@ def unqualified_symbol_items(draw):
             "verify": verify}
 
 @composite
-def qualified_symbol_items(draw):
+def qualified_symbol_items(draw,
+                           label=label,
+                           verify=verify):
     # XXX: ignoring on-ascii
     ok_in_head = ["*", "+", "!", "-", "_",
                   "?", "<", ">", "=",
@@ -133,19 +138,26 @@ def qualified_symbol_items(draw):
             "verify": verify}
 
 @composite
-def bare_symbol_items(draw):
+def bare_symbol_items(draw,
+                      label=label,
+                      verify=verify):
+    #
     sym_item = draw(one_of(unqualified_symbol_items(),
                            qualified_symbol_items()))
     return sym_item
 
 @composite
-def symbol_with_metadata_items(draw, metadata="metadata"):
+def symbol_with_metadata_items(draw,
+                               metadata="metadata",
+                               label=label,
+                               verify=verify_with_metadata):
     # avoid circular dependency
     from .metadata import metadata_items, check_metadata_flavor
     #
     check_metadata_flavor(metadata)
     #
-    sym_item = draw(bare_symbol_items())
+    sym_item = draw(bare_symbol_items(label=label,
+                                      verify=verify))
     #
     str_builder = make_form_with_metadata_str_builder(build_sym_str)
     #
@@ -156,14 +168,20 @@ def symbol_with_metadata_items(draw, metadata="metadata"):
                    min_size=n, max_size=n))
     #
     sym_item.update({"to_str": str_builder,
-                     "verify": verify_with_metadata,
                      "metadata": md_items})
     #
     return sym_item
 
 @composite
-def symbol_items(draw, metadata=False):
+def symbol_items(draw,
+                 metadata=False,
+                 label=label,
+                 verify=verify):
+    #
     if not metadata:
-        return draw(bare_symbol_items())
+        return draw(bare_symbol_items(label=label,
+                                      verify=verify))
     else:
-        return draw(symbol_with_metadata_items(metadata=metadata))
+        return draw(symbol_with_metadata_items(metadata=metadata,
+                                               label=label,
+                                               verify=verify))

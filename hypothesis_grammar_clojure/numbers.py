@@ -10,7 +10,10 @@ def build_num_str(item):
     return item["inputs"]
 
 @composite
-def hex_number_items(draw):
+def hex_number_items(draw,
+                     label=label,
+                     verify=verify):
+    #
     sign = draw(one_of(just(""), just("+"), just("-")))
     #
     x_or_X = draw(one_of(just("X"), just("x")))
@@ -33,7 +36,10 @@ def hex_number_items(draw):
             "verify": verify}
 
 @composite
-def octal_number_items(draw):
+def octal_number_items(draw,
+                       label=label,
+                       verify=verify):
+    #
     sign = draw(one_of(just(""), just("+"), just("-")))
     # XXX: too many digits is a problem
     n = draw(integers(min_value=1, max_value=20))
@@ -52,7 +58,10 @@ def octal_number_items(draw):
             "verify": verify}
 
 @composite
-def radix_number_items(draw):
+def radix_number_items(draw,
+                       label=label,
+                       verify=verify):
+    #
     sign = draw(one_of(just(""), just("+"), just("-")))
     #
     radix = draw(integers(min_value=2, max_value=36))
@@ -75,7 +84,10 @@ def radix_number_items(draw):
             "verify": verify}
 
 @composite
-def ratio_items(draw):
+def ratio_items(draw,
+                label=label,
+                verify=verify):
+    #
     sign = draw(one_of(just(""), just("+"), just("-")))
     #
     p = draw(integers(min_value=0))
@@ -89,7 +101,10 @@ def ratio_items(draw):
             "verify": verify}
 
 @composite
-def double_items(draw):
+def double_items(draw,
+                 label=label,
+                 verify=verify):
+    #
     sign = draw(one_of(just(""), just("+"), just("-")))
     #
     left_of_dot = draw(integers(min_value=0))
@@ -119,7 +134,10 @@ def double_items(draw):
             "verify": verify}
 
 @composite
-def integer_items(draw):
+def integer_items(draw,
+                  label=label,
+                  verify=verify):
+    #
     sign = draw(one_of(just(""), just("+"), just("-")))
     #
     i = draw(integers(min_value=0))
@@ -134,11 +152,20 @@ def integer_items(draw):
             "verify": verify}
 
 @composite
-def number_items(draw):
-    num_item = draw(one_of(radix_number_items(),
-                           hex_number_items(),
-                           octal_number_items(),
-                           ratio_items(),
-                           double_items(),
-                           integer_items()))
+def number_items(draw,
+                 label=label,
+                 verify=verify):
+    #
+    num_item = draw(one_of(radix_number_items(label=label,
+                                              verify=verify),
+                           hex_number_items(label=label,
+                                            verify=verify),
+                           octal_number_items(label=label,
+                                              verify=verify),
+                           ratio_items(label=label,
+                                       verify=verify),
+                           double_items(label=label,
+                                        verify=verify),
+                           integer_items(label=label,
+                                         verify=verify)))
     return num_item
