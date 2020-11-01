@@ -30,6 +30,7 @@ def build_read_cond_str(read_cond_item):
 
 @composite
 def bare_read_cond_items(draw,
+                         keyword_elts=keyword_items(),
                          elements=form_items(),
                          separators=separator_strings(),
                          label=label,
@@ -37,7 +38,7 @@ def bare_read_cond_items(draw,
     #
     n = draw(integers(min_value=0, max_value=floor(coll_max/2)))
     # XXX: may be auto-resolved are not allowed?
-    kwd_items = draw(lists(elements=keyword_items(),
+    kwd_items = draw(lists(elements=keyword_elts,
                            min_size=n, max_size=n))
     #
     frm_items = draw(lists(elements=elements,
@@ -63,6 +64,7 @@ def bare_read_cond_items(draw,
 
 @composite
 def read_cond_with_metadata_items(draw,
+                                  keyword_elts=keyword_items(),
                                   elements=form_items(),
                                   separators=separator_strings(),
                                   metadata="metadata",
@@ -73,7 +75,8 @@ def read_cond_with_metadata_items(draw,
     #
     check_metadata_flavor(metadata)
     #
-    rc_item = draw(bare_read_cond_items(elements=elements,
+    rc_item = draw(bare_read_cond_items(keyword_elts=keyword_elts,
+                                        elements=elements,
                                         separators=separators,
                                         label=label,
                                         verify=verify))
@@ -93,18 +96,21 @@ def read_cond_with_metadata_items(draw,
 
 @composite
 def read_cond_items(draw,
+                    keyword_elts=keyword_items(),
                     elements=form_items(),
                     separators=separator_strings(),
                     metadata=False,
                     label=label,
                     verify=verify):
     if not metadata:
-        return draw(bare_read_cond_items(elements=elements,
+        return draw(bare_read_cond_items(keyword_elts=keyword_elts,
+                                         elements=elements,
                                          separators=separators,
                                          label=label,
                                          verify=verify))
     else:
-        return draw(read_cond_with_metadata_items(elements=elements,
+        return draw(read_cond_with_metadata_items(keyword_elts=keyword_elts,
+                                                  elements=elements,
                                                   separators=separators,
                                                   metadata=metadata,
                                                   label=label,
