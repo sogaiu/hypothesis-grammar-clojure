@@ -20,10 +20,10 @@ def build_unquote_splicing_form_str(item):
 
 @composite
 def bare_unquote_splicing_form_items(draw,
-                                     forms=form_items(),
+                                     form=form_items(),
                                      label=label,
                                      verify=verify):
-    form_item = draw(forms)
+    form_item = draw(form)
     #
     return {"inputs": form_item,
             "label": label,
@@ -33,7 +33,7 @@ def bare_unquote_splicing_form_items(draw,
 
 @composite
 def unquote_splicing_form_with_metadata_items(draw,
-                                              forms=form_items(),
+                                              form=form_items(),
                                               metadata="metadata",
                                               label=label,
                                               verify=verify_with_metadata):
@@ -42,7 +42,7 @@ def unquote_splicing_form_with_metadata_items(draw,
     #
     check_metadata_flavor(metadata)
     #
-    uqs_form = draw(bare_unquote_splicing_form_items(forms=forms,
+    uqs_form = draw(bare_unquote_splicing_form_items(form=form,
                                                      label=label,
                                                      verify=verify))
     #
@@ -62,17 +62,17 @@ def unquote_splicing_form_with_metadata_items(draw,
 
 @composite
 def unquote_splicing_form_items(draw,
-                                forms=form_items(),
+                                form=form_items(),
                                 metadata=False,
                                 label=label,
                                 verify=verify):
     if not metadata:
-        return draw(bare_unquote_splicing_form_items(forms=forms,
+        return draw(bare_unquote_splicing_form_items(form=form,
                                                      label=label,
                                                      verify=verify))
     else:
         return \
-            draw(unquote_splicing_form_with_metadata_items(forms=forms,
+            draw(unquote_splicing_form_with_metadata_items(form=form,
                                                            metadata=metadata,
                                                            label=label,
                                                            verify=verify))

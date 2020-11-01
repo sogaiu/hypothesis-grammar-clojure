@@ -20,10 +20,10 @@ def build_syntax_quote_form_str(item):
 
 @composite
 def bare_syntax_quote_form_items(draw,
-                                 forms=form_items(),
+                                 form=form_items(),
                                  label=label,
                                  verify=verify):
-    form_item = draw(forms)
+    form_item = draw(form)
     #
     return {"inputs": form_item,
             "label": label,
@@ -33,7 +33,7 @@ def bare_syntax_quote_form_items(draw,
 
 @composite
 def syntax_quote_form_with_metadata_items(draw,
-                                          forms=form_items(),
+                                          form=form_items(),
                                           metadata="metadata",
                                           label=label,
                                           verify=verify_with_metadata):
@@ -42,7 +42,7 @@ def syntax_quote_form_with_metadata_items(draw,
     #
     check_metadata_flavor(metadata)
     #
-    sq_form = draw(bare_syntax_quote_form_items(forms,
+    sq_form = draw(bare_syntax_quote_form_items(form=form,
                                                 label=label,
                                                 verify=verify))
     #
@@ -61,17 +61,17 @@ def syntax_quote_form_with_metadata_items(draw,
 
 @composite
 def syntax_quote_form_items(draw,
-                            forms=form_items(),
+                            form=form_items(),
                             metadata=False,
                             label=label,
                             verify=verify):
     #
     if not metadata:
-        return draw(bare_syntax_quote_form_items(forms=forms,
+        return draw(bare_syntax_quote_form_items(form=form,
                                                  label=label,
                                                  verify=verify))
     else:
-        return draw(syntax_quote_form_with_metadata_items(forms=forms,
+        return draw(syntax_quote_form_with_metadata_items(form=form,
                                                           metadata=metadata,
                                                           label=label,
                                                           verify=verify))

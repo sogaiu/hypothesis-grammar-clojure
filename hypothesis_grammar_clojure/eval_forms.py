@@ -31,11 +31,11 @@ def evalee_items(draw):
 
 @composite
 def bare_eval_form_items(draw,
-                         forms=evalee_items(),
+                         form=evalee_items(),
                          label=label,
                          verify=verify):
     #
-    evalee_item = draw(forms)
+    evalee_item = draw(form)
     #
     return {"inputs": evalee_item,
             "label": label,
@@ -45,7 +45,7 @@ def bare_eval_form_items(draw,
 
 @composite
 def eval_form_with_metadata_items(draw,
-                                  forms=evalee_items(),
+                                  form=evalee_items(),
                                   metadata="metadata",
                                   label=label,
                                   verify=verify_with_metadata):
@@ -54,7 +54,7 @@ def eval_form_with_metadata_items(draw,
     #
     check_metadata_flavor(metadata)
     #
-    evl_form = draw(bare_eval_form_items(forms=forms,
+    evl_form = draw(bare_eval_form_items(form=form,
                                          label=label,
                                          verify=verify))
     #
@@ -73,16 +73,16 @@ def eval_form_with_metadata_items(draw,
 
 @composite
 def eval_form_items(draw,
-                    forms=evalee_items(),
+                    form=evalee_items(),
                     metadata=False,
                     label=label,
                     verify=verify):
     if not metadata:
-        return draw(bare_eval_form_items(forms=forms,
+        return draw(bare_eval_form_items(form=form,
                                          label=label,
                                          verify=verify))
     else:
-        return draw(eval_form_with_metadata_items(forms=forms,
+        return draw(eval_form_with_metadata_items(form=form,
                                                   metadata=metadata,
                                                   label=label,
                                                   verify=verify))

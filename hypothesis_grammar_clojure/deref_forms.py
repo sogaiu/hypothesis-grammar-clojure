@@ -20,11 +20,11 @@ def build_deref_form_str(item):
 
 @composite
 def bare_deref_form_items(draw,
-                          forms=form_items(),
+                          form=form_items(),
                           label=label,
                           verify=verify):
     #
-    form_item = draw(forms)
+    form_item = draw(form)
     #
     return {"inputs": form_item,
             "label": label,
@@ -34,7 +34,7 @@ def bare_deref_form_items(draw,
 
 @composite
 def deref_form_with_metadata_items(draw,
-                                   forms=form_items(),
+                                   form=form_items(),
                                    metadata="metadata",
                                    label=label,
                                    verify=verify_with_metadata):
@@ -43,7 +43,7 @@ def deref_form_with_metadata_items(draw,
     #
     check_metadata_flavor(metadata)
     #
-    d_form = draw(bare_deref_form_items(forms=forms,
+    d_form = draw(bare_deref_form_items(form=form,
                                         label=label,
                                         verify=verify))
     #
@@ -62,16 +62,16 @@ def deref_form_with_metadata_items(draw,
 
 @composite
 def deref_form_items(draw,
-                     forms=form_items(),
+                     form=form_items(),
                      metadata=False,
                      label=label,
                      verify=verify):
     if not metadata:
-        return draw(bare_deref_form_items(forms=forms,
+        return draw(bare_deref_form_items(form=form,
                                           label=label,
                                           verify=verify))
     else:
-        return draw(deref_form_with_metadata_items(forms=forms,
+        return draw(deref_form_with_metadata_items(form=form,
                                                    metadata=metadata,
                                                    label=label,
                                                    verify=verify))
